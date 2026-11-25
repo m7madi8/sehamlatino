@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 125" fill="none" aria-hidden="true">
+  <title>Seham Latino — fine portrait outline</title>
+  <!-- Desktop partial strokes with generous optical offset — never a full mechanical border -->
+  <path
+    d="M16 22
+       C34 4 55 -1 72 8
+       C90 18 101 34 102 52
+       C103 72 96 92 84 106"
+    stroke="#5c1a32"
+    stroke-opacity="0.48"
+    stroke-width="0.8"
+    stroke-linecap="round"
+    vector-effect="non-scaling-stroke"
+    fill="none"/>
+  <path
+    d="M8 55
+       C2 72 8 94 24 108
+       C42 124 68 128 84 118"
+    stroke="#5c1a32"
+    stroke-opacity="0.34"
+    stroke-width="0.65"
+    stroke-linecap="round"
+    vector-effect="non-scaling-stroke"
+    fill="none"/>
+</svg>

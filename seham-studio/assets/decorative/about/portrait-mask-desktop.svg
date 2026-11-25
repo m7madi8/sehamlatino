@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 125" fill="none" aria-hidden="true">
+  <title>Seham Latino — desktop portrait mask</title>
+  <defs>
+    <!-- Wider crown · soft left indent · gentle right waist · generous rounded base -->
+    <clipPath id="portrait-mask-desktop" clipPathUnits="objectBoundingBox">
+      <path d="M0.230 0.055
+               C0.385 0.002 0.560 0.000 0.715 0.040
+               C0.865 0.082 0.960 0.165 0.990 0.300
+               C1.015 0.430 0.995 0.545 0.935 0.640
+               C0.870 0.740 0.885 0.845 0.810 0.930
+               C0.715 1.035 0.520 1.030 0.360 0.975
+               C0.210 0.925 0.095 0.830 0.050 0.690
+               C0.005 0.555 0.000 0.405 0.055 0.275
+               C0.105 0.160 0.120 0.095 0.230 0.055 Z"/>
+    </clipPath>
+  </defs>
+</svg>

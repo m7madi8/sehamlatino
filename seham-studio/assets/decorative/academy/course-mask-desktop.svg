@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" fill="none" aria-hidden="true">
+  <title>Seham Latino — academy course mask desktop</title>
+  <defs>
+    <clipPath id="academy-course-mask-desktop" clipPathUnits="objectBoundingBox">
+      <path d="M0.000 0.078
+               C0.000 0.028 0.038 0.000 0.090 0.000
+               L0.780 0.000
+               C0.875 0.000 0.940 0.055 0.948 0.145
+               C0.965 0.310 0.855 0.385 0.835 0.505
+               C0.812 0.640 0.940 0.715 0.958 0.845
+               C0.972 0.930 0.920 1.000 0.820 1.000
+               L0.090 1.000
+               C0.038 1.000 0.000 0.972 0.000 0.922
+               Z"/>
+    </clipPath>
+  </defs>
+</svg>

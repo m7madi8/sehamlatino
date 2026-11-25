@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 115" fill="none" aria-hidden="true">
+  <title>Seham Latino — mobile portrait mask</title>
+  <defs>
+    <!-- Wider egg/pebble — less vertically stretched than desktop -->
+    <clipPath id="portrait-mask-mobile" clipPathUnits="objectBoundingBox">
+      <path d="M0.145 0.110
+               C0.290 0.030 0.500 0.005 0.680 0.050
+               C0.850 0.095 0.965 0.200 0.990 0.355
+               C1.015 0.510 0.965 0.660 0.885 0.790
+               C0.795 0.935 0.620 1.015 0.430 0.990
+               C0.255 0.965 0.120 0.870 0.060 0.720
+               C0.005 0.580 0.000 0.420 0.050 0.280
+               C0.090 0.170 0.055 0.155 0.145 0.110 Z"/>
+    </clipPath>
+  </defs>
+</svg>

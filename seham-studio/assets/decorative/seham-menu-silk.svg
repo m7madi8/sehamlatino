@@ -1,0 +1,37 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 390 900" fill="none" preserveAspectRatio="xMidYMid meet" aria-hidden="true">
+  <defs>
+    <linearGradient id="msilk" x1="0" y1="0" x2="1" y2=".85" gradientUnits="objectBoundingBox">
+      <stop stop-color="#a65e70" stop-opacity=".07"/>
+      <stop offset=".32" stop-color="#c88e9a" stop-opacity=".36"/>
+      <stop offset=".53" stop-color="#f5dadd" stop-opacity=".16"/>
+      <stop offset=".75" stop-color="#a96576" stop-opacity=".28"/>
+      <stop offset="1" stop-color="#e8b9c2" stop-opacity="0"/>
+    </linearGradient>
+    <linearGradient id="mfold" x1="0" y1="0" x2=".8" y2="1">
+      <stop stop-color="#f9e6e5" stop-opacity="0"/>
+      <stop offset=".38" stop-color="#b87b87" stop-opacity=".28"/>
+      <stop offset=".52" stop-color="#fff8f3" stop-opacity=".72"/>
+      <stop offset=".68" stop-color="#cc9aa5" stop-opacity=".22"/>
+      <stop offset="1" stop-color="#d6a6ae" stop-opacity="0"/>
+    </linearGradient>
+    <linearGradient id="medge">
+      <stop stop-color="#bc8590" stop-opacity="0"/>
+      <stop offset=".43" stop-color="#fff8f3" stop-opacity=".88"/>
+      <stop offset=".72" stop-color="#bf8593" stop-opacity=".42"/>
+      <stop offset="1" stop-color="#bf8593" stop-opacity="0"/>
+    </linearGradient>
+    <g id="msilk-top">
+      <path d="M-28 260 C4 181 58 183 99 126 C144 64 184 22 267 -22 C177 -3 125 10 69 58 C20 101 -2 151 -28 179Z" fill="url(#msilk)"/>
+      <path d="M-25 246 C-1 179 67 163 109 108 C151 52 198 12 267 -22 C197 1 146 12 91 63 C42 109 12 141 -25 160Z" fill="url(#mfold)"/>
+      <path d="M-25 222 C20 155 70 154 122 96 C175 37 214 7 267 -22 C190 4 152 42 111 81 C58 133 22 130 -25 180Z" fill="url(#msilk)"/>
+      <path d="M-25 224 C20 155 70 154 122 96 C175 37 214 7 267 -22" stroke="url(#medge)" stroke-width=".8"/>
+      <path d="M-28 260 C4 181 58 183 99 126 C144 64 184 22 267 -22" stroke="url(#medge)" stroke-width=".65"/>
+      <path d="M-20 190 C49 133 80 142 133 81 S222 3 267 -22" stroke="url(#medge)" stroke-width="1.4"/>
+      <path d="M-30 204 C35 146 76 150 124 97 S213 10 267 -22" stroke="#fff9f5" stroke-opacity=".26" stroke-width=".5"/>
+    </g>
+  </defs>
+  <use href="#msilk-top"/>
+  <g transform="translate(390 890) rotate(180) scale(1.55 1.3)" opacity=".92">
+    <use href="#msilk-top"/>
+  </g>
+</svg>
