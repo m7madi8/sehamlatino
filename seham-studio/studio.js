@@ -1,4 +1,21 @@
 (() => {
+  /* Fonts: non-blocking injection (CSS no longer @import-blocks parse) */
+  if (!document.getElementById("seham-fonts")) {
+    const pre1 = document.createElement("link");
+    pre1.rel = "preconnect";
+    pre1.href = "https://fonts.googleapis.com";
+    const pre2 = document.createElement("link");
+    pre2.rel = "preconnect";
+    pre2.href = "https://fonts.gstatic.com";
+    pre2.crossOrigin = "";
+    const fonts = document.createElement("link");
+    fonts.id = "seham-fonts";
+    fonts.rel = "stylesheet";
+    fonts.href =
+      "https://fonts.googleapis.com/css2?family=Aref+Ruqaa:wght@400;700&family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=Jost:wght@300;400&family=Tajawal:wght@400;500;700&display=swap";
+    document.head.append(pre1, pre2, fonts);
+  }
+
   const header = document.querySelector(".site-header");
   const progress = document.querySelector(".read-progress");
   const drawer = document.querySelector("#drawer");
@@ -6,12 +23,15 @@
   const closeBtn = document.querySelector(".menu-close");
   const reduceMotion = matchMedia("(prefers-reduced-motion: reduce)").matches;
 
-  let ticking = false;
+  /* ---------- Single scroll rAF bus (header + progress) ---------- */
+  let scrollTicking = false;
   let lastScrolled = null;
+  let lastProgress = -1;
 
-  function updateHeader() {
+  function updateChrome() {
+    const y = window.scrollY || 0;
     if (header) {
-      const shouldScroll = window.scrollY > 18;
+      const shouldScroll = y > 18;
       if (shouldScroll !== lastScrolled) {
         header.classList.toggle("scrolled", shouldScroll);
         lastScrolled = shouldScroll;
@@ -19,20 +39,24 @@
     }
     if (progress) {
       const max = document.documentElement.scrollHeight - innerHeight;
-      progress.style.width = (max > 0 ? (window.scrollY / max) * 100 : 0) + "%";
+      const ratio = max > 0 ? Math.min(1, Math.max(0, y / max)) : 0;
+      const rounded = Math.round(ratio * 1000) / 1000;
+      if (rounded !== lastProgress) {
+        progress.style.transform = "scaleX(" + rounded + ")";
+        lastProgress = rounded;
+      }
     }
-    ticking = false;
+    scrollTicking = false;
   }
 
   function onScroll() {
-    if (!ticking) {
-      ticking = true;
-      requestAnimationFrame(updateHeader);
-    }
+    if (scrollTicking) return;
+    scrollTicking = true;
+    requestAnimationFrame(updateChrome);
   }
 
   addEventListener("scroll", onScroll, { passive: true });
-  updateHeader();
+  updateChrome();
 
   /* ---------- Editorial header signature ---------- */
   const BRAND_MOTTO = "DANCE · LOVE · GROW";
@@ -271,13 +295,27 @@
         },
         {
           root: null,
-          rootMargin: "-10% 0px -20% 0px",
-          threshold: [0, 0.05, 0.15, 0.3, 0.5, 0.75, 1],
+          rootMargin: "-12% 0px -28% 0px",
+          /* Fewer thresholds = fewer layout reads during scroll */
+          threshold: [0, 0.2, 0.55],
         }
       );
 
       observed.forEach(({ el }) => chapterIo.observe(el));
-      addEventListener("scroll", schedulePick, { passive: true });
+      /*
+        Chapter changes are driven by IntersectionObserver only.
+        Avoid per-frame getBoundingClientRect during scroll — that was a
+        primary source of mobile scroll stutter on the homepage.
+      */
+      let resizePickTimer = 0;
+      addEventListener(
+        "resize",
+        () => {
+          clearTimeout(resizePickTimer);
+          resizePickTimer = window.setTimeout(schedulePick, 140);
+        },
+        { passive: true }
+      );
       // Seed default
       setActiveChapter(".home-hero", false);
       schedulePick();
@@ -639,18 +677,30 @@
     function measureStage() {
       const previous = track.style.minHeight;
       let max = 0;
-      quotes.forEach((quote) => {
-        const wasHidden = quote.hasAttribute("hidden");
-        const wasActive = quote.classList.contains("is-active");
+      /* Batch reads after writes — avoid interleaving style + layout per quote */
+      const states = quotes.map((quote) => ({
+        quote,
+        wasHidden: quote.hasAttribute("hidden"),
+        wasActive: quote.classList.contains("is-active"),
+      }));
+      states.forEach(({ quote }) => {
         quote.hidden = false;
         quote.classList.add("is-active");
-        quote.style.position = "relative";
+        quote.style.position = "absolute";
         quote.style.visibility = "hidden";
         quote.style.pointerEvents = "none";
+        quote.style.insetInline = "0";
+        quote.style.top = "0";
+      });
+      states.forEach(({ quote }) => {
         max = Math.max(max, quote.offsetHeight);
+      });
+      states.forEach(({ quote, wasHidden, wasActive }) => {
         quote.style.position = "";
         quote.style.visibility = "";
         quote.style.pointerEvents = "";
+        quote.style.insetInline = "";
+        quote.style.top = "";
         if (wasHidden) quote.hidden = true;
         if (!wasActive) quote.classList.remove("is-active");
       });
@@ -798,15 +848,25 @@
   if (!video) return;
 
   const reduceMotion = matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const saveData =
+    (navigator.connection && navigator.connection.saveData) ||
+    matchMedia("(prefers-reduced-data: reduce)").matches;
   const isArabic = (document.documentElement.lang || "").startsWith("ar");
   const labelPause = isArabic ? "إيقاف الحركة المستمرة" : "Pause continuous motion";
   const labelPlay = isArabic ? "تشغيل الحركة" : "Play motion";
+  const lazySrc = video.getAttribute("data-src");
 
   let inView = false;
-  let userPaused = reduceMotion;
+  let userPaused = reduceMotion || saveData;
   let sourceArmed = false;
 
-  if (reduceMotion) media.classList.add("is-reduced");
+  if (reduceMotion || saveData) media.classList.add("is-reduced");
+
+  /* Strip eager <source> children so browsers cannot prefetch ~2.7MB offscreen */
+  if (lazySrc) {
+    while (video.firstChild) video.removeChild(video.firstChild);
+    video.removeAttribute("src");
+  }
 
   function syncToggle() {
     if (!toggle) return;
@@ -820,14 +880,20 @@
   }
 
   function concealLive() {
-    /* Poster image removed — keep last video frame visible when paused */
+    /* Keep last video frame visible when paused */
     media.classList.remove("is-live");
   }
 
   function armSource() {
     if (sourceArmed) return;
     sourceArmed = true;
-    video.preload = "auto";
+    if (lazySrc) {
+      const source = document.createElement("source");
+      source.src = lazySrc;
+      source.type = "video/mp4";
+      video.appendChild(source);
+    }
+    video.preload = "metadata";
     try {
       video.load();
     } catch (_) {
@@ -857,6 +923,7 @@
     if (!video.paused) {
       video.pause();
     }
+    concealLive();
     syncToggle();
   }
 
@@ -866,9 +933,6 @@
   });
 
   video.addEventListener("pause", () => {
-    if (!inView || userPaused || document.hidden) {
-      /* keep last frame under poster fade only when fully stopped out of view */
-    }
     syncToggle();
   });
 
@@ -884,6 +948,8 @@
         entries.forEach((entry) => {
           inView = entry.isIntersecting && entry.intersectionRatio >= 0.28;
           if (inView) {
+            /* Always arm media when visible so the first frame paints even if paused */
+            armSource();
             tryPlay();
           } else {
             pauseSoftly();
@@ -893,8 +959,9 @@
       { threshold: [0, 0.28, 0.55], rootMargin: "8% 0px" }
     );
     io.observe(media);
-  } else if (!reduceMotion) {
+  } else {
     inView = true;
+    armSource();
     tryPlay();
   }
 
@@ -927,9 +994,13 @@
   if (!hero) return;
 
   const video = hero.querySelector(".hero-cinema-video");
+  const still = hero.querySelector(".hero-still");
   if (!video) return;
 
   const reduceMotion = matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const saveData =
+    (navigator.connection && navigator.connection.saveData) ||
+    matchMedia("(prefers-reduced-data: reduce)").matches;
   const mobileMq = matchMedia("(max-width: 760px)");
   const src = video.getAttribute("data-src");
   const poster = video.getAttribute("data-poster");
@@ -937,11 +1008,31 @@
   let armed = false;
   let inView = true;
   let entered = false;
+  let stillArmed = false;
 
   function markEntered() {
     if (entered) return;
     entered = true;
     hero.classList.add("is-cinema-entered");
+  }
+
+  function armStill() {
+    if (!still || stillArmed) return;
+    const desktopSrc = still.getAttribute("data-src") || still.getAttribute("src");
+    if (!desktopSrc || desktopSrc.startsWith("data:")) return;
+    /* Mobile cinema path must never download the desktop hero still */
+    if (mobileMq.matches) {
+      if (still.hasAttribute("src") && !still.getAttribute("src").startsWith("data:")) {
+        still.removeAttribute("src");
+        still.removeAttribute("fetchpriority");
+      }
+      return;
+    }
+    stillArmed = true;
+    if (still.getAttribute("src") !== desktopSrc) {
+      still.setAttribute("src", desktopSrc);
+    }
+    still.setAttribute("fetchpriority", "high");
   }
 
   function disarm() {
@@ -959,14 +1050,14 @@
   }
 
   function arm() {
-    if (armed || !src || reduceMotion) return;
+    if (armed || !src || reduceMotion || saveData) return;
     armed = true;
     if (poster) video.setAttribute("poster", poster);
     const source = document.createElement("source");
     source.src = src;
     source.type = "video/mp4";
     video.appendChild(source);
-    video.preload = "auto";
+    video.preload = "metadata";
     video.muted = true;
     video.defaultMuted = true;
     video.playsInline = true;
@@ -980,7 +1071,7 @@
   }
 
   async function tryPlay() {
-    if (!mobileMq.matches || reduceMotion || !inView || document.hidden) return;
+    if (!mobileMq.matches || reduceMotion || saveData || !inView || document.hidden) return;
     arm();
     if (!armed) return;
     try {
@@ -998,15 +1089,18 @@
 
   function pauseSoftly() {
     if (!video.paused) video.pause();
+    hero.classList.remove("is-cinema-live");
   }
 
   function syncViewport() {
+    armStill();
     if (!mobileMq.matches) {
       disarm();
       markEntered();
       return;
     }
-    if (reduceMotion) {
+    if (reduceMotion || saveData) {
+      /* Poster-only fallback — no video decode on reduced-data / reduced-motion */
       if (poster) video.setAttribute("poster", poster);
       hero.classList.add("is-cinema-ready");
       markEntered();
@@ -1063,9 +1157,9 @@
     mobileMq.addListener(onViewportChange);
   }
 
-  /* Defer arming until after first paint so desktop never downloads */
+  /* Defer arming until after first paint so desktop never downloads mobile film */
   requestAnimationFrame(() => {
-    if (!mobileMq.matches || reduceMotion) {
+    if (!mobileMq.matches || reduceMotion || saveData) {
       markEntered();
     } else {
       /* Ensure copy enters even if autoplay is blocked */
