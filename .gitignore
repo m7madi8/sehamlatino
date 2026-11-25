@@ -1,3 +1,9 @@
 ﻿# Large media (exceeds GitHub 100MB limit)
 Mixxxx.mp4
 seham-studio/assets/video/Mixxxx.mp4
+
+# Raw / oversized source media (not for deploy)
+*.CR3
+/*.mp4
+seham-studio/Untitled
+

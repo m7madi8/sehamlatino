@@ -360,14 +360,7 @@
       'a[href], button:not([disabled]), textarea, input, select, [tabindex]:not([tabindex="-1"])';
 
     function setOriginFromTrigger() {
-      const r = trigger.getBoundingClientRect();
-      const panelBox = panel.getBoundingClientRect();
-      const width = Math.max(panelBox.width || innerWidth, 1);
-      const height = Math.max(panelBox.height || innerHeight, 1);
-      const x = ((r.left + r.width / 2 - panelBox.left) / width) * 100;
-      const y = ((r.top + r.height / 2 - panelBox.top) / height) * 100;
-      drawer.style.setProperty("--ox", `${Math.min(100, Math.max(0, x)).toFixed(2)}%`);
-      drawer.style.setProperty("--oy", `${Math.min(100, Math.max(0, y)).toFixed(2)}%`);
+      /* Kept for API stability — editorial sheet no longer uses origin clip */
     }
 
     function getFocusable() {
@@ -486,12 +479,12 @@
 
       const onEnd = (e) => {
         if (e.target !== panel) return;
-        if (e.propertyName && e.propertyName !== "clip-path" && e.propertyName !== "opacity") return;
+        if (e.propertyName && e.propertyName !== "opacity" && e.propertyName !== "transform") return;
         panel.removeEventListener("transitionend", onEnd);
         finishClose();
       };
       panel.addEventListener("transitionend", onEnd);
-      closeTimer = setTimeout(finishClose, 520);
+      closeTimer = setTimeout(finishClose, 620);
     }
 
     trigger.addEventListener("click", openDrawer);
@@ -827,6 +820,7 @@
   }
 
   function concealLive() {
+    /* Poster image removed — keep last video frame visible when paused */
     media.classList.remove("is-live");
   }
 
@@ -926,4 +920,157 @@
   });
 
   syncToggle();
+})();
+
+(() => {
+  const hero = document.querySelector("[data-cinematic-hero]");
+  if (!hero) return;
+
+  const video = hero.querySelector(".hero-cinema-video");
+  if (!video) return;
+
+  const reduceMotion = matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const mobileMq = matchMedia("(max-width: 760px)");
+  const src = video.getAttribute("data-src");
+  const poster = video.getAttribute("data-poster");
+
+  let armed = false;
+  let inView = true;
+  let entered = false;
+
+  function markEntered() {
+    if (entered) return;
+    entered = true;
+    hero.classList.add("is-cinema-entered");
+  }
+
+  function disarm() {
+    hero.classList.remove("is-cinema-ready", "is-cinema-live");
+    if (!video.paused) video.pause();
+    video.removeAttribute("src");
+    video.removeAttribute("poster");
+    while (video.firstChild) video.removeChild(video.firstChild);
+    try {
+      video.load();
+    } catch (_) {
+      /* ignore */
+    }
+    armed = false;
+  }
+
+  function arm() {
+    if (armed || !src || reduceMotion) return;
+    armed = true;
+    if (poster) video.setAttribute("poster", poster);
+    const source = document.createElement("source");
+    source.src = src;
+    source.type = "video/mp4";
+    video.appendChild(source);
+    video.preload = "auto";
+    video.muted = true;
+    video.defaultMuted = true;
+    video.playsInline = true;
+    video.setAttribute("playsinline", "");
+    video.setAttribute("webkit-playsinline", "");
+    try {
+      video.load();
+    } catch (_) {
+      /* keep still frame */
+    }
+  }
+
+  async function tryPlay() {
+    if (!mobileMq.matches || reduceMotion || !inView || document.hidden) return;
+    arm();
+    if (!armed) return;
+    try {
+      const playPromise = video.play();
+      if (playPromise && typeof playPromise.then === "function") {
+        await playPromise;
+      }
+      hero.classList.add("is-cinema-ready", "is-cinema-live");
+      markEntered();
+    } catch (_) {
+      hero.classList.add("is-cinema-ready");
+      markEntered();
+    }
+  }
+
+  function pauseSoftly() {
+    if (!video.paused) video.pause();
+  }
+
+  function syncViewport() {
+    if (!mobileMq.matches) {
+      disarm();
+      markEntered();
+      return;
+    }
+    if (reduceMotion) {
+      if (poster) video.setAttribute("poster", poster);
+      hero.classList.add("is-cinema-ready");
+      markEntered();
+      return;
+    }
+    tryPlay();
+  }
+
+  video.addEventListener("playing", () => {
+    hero.classList.add("is-cinema-ready", "is-cinema-live");
+    markEntered();
+  });
+
+  video.addEventListener("loadeddata", () => {
+    hero.classList.add("is-cinema-ready");
+  });
+
+  video.addEventListener("error", () => {
+    hero.classList.add("is-cinema-ready");
+    markEntered();
+  });
+
+  if ("IntersectionObserver" in window) {
+    const io = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          inView = entry.isIntersecting && entry.intersectionRatio >= 0.2;
+          if (inView) {
+            tryPlay();
+          } else {
+            pauseSoftly();
+          }
+        });
+      },
+      { threshold: [0, 0.2, 0.55], rootMargin: "10% 0px" }
+    );
+    io.observe(hero);
+  } else if (!reduceMotion) {
+    inView = true;
+  }
+
+  document.addEventListener("visibilitychange", () => {
+    if (document.hidden) {
+      pauseSoftly();
+    } else {
+      tryPlay();
+    }
+  });
+
+  const onViewportChange = () => syncViewport();
+  if (typeof mobileMq.addEventListener === "function") {
+    mobileMq.addEventListener("change", onViewportChange);
+  } else if (typeof mobileMq.addListener === "function") {
+    mobileMq.addListener(onViewportChange);
+  }
+
+  /* Defer arming until after first paint so desktop never downloads */
+  requestAnimationFrame(() => {
+    if (!mobileMq.matches || reduceMotion) {
+      markEntered();
+    } else {
+      /* Ensure copy enters even if autoplay is blocked */
+      setTimeout(markEntered, 1200);
+    }
+    syncViewport();
+  });
 })();
