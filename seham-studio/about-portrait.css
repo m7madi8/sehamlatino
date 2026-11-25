@@ -370,17 +370,17 @@ html[dir="ltr"] .about-portrait .ap-cta {
     display: block;
   }
 
-  /* Tight halo — stays with the photo, does not reach the copy block */
+  /* Tight halo — stays with the photo; positive bottom inset pulls mass away from copy */
   .about-portrait .ap-blob {
-    inset: -4% -5% -2.5% -5%;
+    inset: -4% -5% 4% -5%;
   }
 
   .about-portrait .ap-copy {
     align-items: center;
     width: min(86vw, 580px);
-    margin-top: clamp(28px, 5.5vw, 52px);
+    margin-top: clamp(36px, 6.5vw, 60px);
     text-align: center;
-    padding-block-start: clamp(4px, 1vw, 10px);
+    padding-block-start: clamp(6px, 1.2vw, 12px);
   }
 
   .about-portrait .ap-name {
