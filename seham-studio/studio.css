@@ -1088,9 +1088,13 @@ html[dir="ltr"] .head-cta:focus-visible i {
 
 .menu-link[aria-current="page"] {
   color: var(--garnet);
-  background: transparent;
-  font-weight: 400;
+  background: none;
+  background-color: transparent;
+  background-image: none;
+  border: none;
+  border-radius: 0;
   box-shadow: none;
+  font-weight: 400;
 }
 
 .menu-link[aria-current="page"]::before {
@@ -1101,6 +1105,12 @@ html[dir="ltr"] .head-cta:focus-visible i {
   width: 1.5px;
   border-radius: 0;
   background: var(--garnet);
+  box-shadow: none;
+}
+
+.menu-link[aria-current="page"]::after {
+  content: none;
+  display: none;
 }
 
 /* —— Lower zone: conversion —— */
