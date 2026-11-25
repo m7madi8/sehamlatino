@@ -1,4 +1,4 @@
-@import url("https://fonts.googleapis.com/css2?family=Aref+Ruqaa:wght@400;700&family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=Jost:wght@300;400&family=Tajawal:wght@400;500;700&display=swap");
+/* Fonts load via <link> / studio.js inject — never @import (blocks CSS parse). */
 
 /* ============================================================
    SEHAM LATINO — Cadencia Íntima
@@ -65,12 +65,19 @@
 }
 
 html {
-  scroll-behavior: smooth;
+  /* Smooth scroll only for intentional in-page anchors — never fight touch scrolling */
+  scroll-behavior: auto;
   scroll-padding-top: calc(var(--header-h) + 16px);
   /* Keep classic scrollbar space reserved so menu lock never shifts layout */
   scrollbar-gutter: stable;
   scrollbar-width: thin;
   scrollbar-color: color-mix(in srgb, var(--garnet) 42%, var(--rose)) transparent;
+}
+
+@media (hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference) {
+  html {
+    scroll-behavior: smooth;
+  }
 }
 
 body {
@@ -289,10 +296,18 @@ summary:focus-visible {
   inset-block-start: 0;
   inset-inline-start: 0;
   height: 2px;
-  width: 0;
+  width: 100%;
   z-index: 120;
   background: var(--rose);
   pointer-events: none;
+  transform: scaleX(0);
+  transform-origin: left center;
+  will-change: transform;
+  backface-visibility: hidden;
+}
+
+html[dir="rtl"] .read-progress {
+  transform-origin: right center;
 }
 
 .visually-hidden {
@@ -432,15 +447,13 @@ summary:focus-visible {
   border-bottom: 1px solid transparent;
   box-shadow: 0 0 0 transparent;
   color: var(--ink);
-  will-change: height, background-color, box-shadow;
+  /* Avoid will-change on layout/paint props — it inflates layers every scroll */
   transition:
-    height 0.55s var(--ease-soft),
-    background-color 0.55s var(--ease-soft),
-    border-color 0.55s var(--ease-soft),
-    box-shadow 0.55s var(--ease-soft),
-    color 0.45s var(--ease-soft),
-    backdrop-filter 0.55s var(--ease-soft),
-    -webkit-backdrop-filter 0.55s var(--ease-soft);
+    height 0.45s var(--ease-soft),
+    background-color 0.45s var(--ease-soft),
+    border-color 0.45s var(--ease-soft),
+    box-shadow 0.45s var(--ease-soft),
+    color 0.35s var(--ease-soft);
 }
 
 /* Homepage: fixed overlay so scroll transition never jumps layout */
@@ -493,12 +506,20 @@ summary:focus-visible {
 .site-header.scrolled,
 body:not(.page-index) .site-header {
   --header-h: 72px;
-  background: color-mix(in srgb, var(--paper) 90%, transparent);
+  background: color-mix(in srgb, var(--paper) 94%, transparent);
   border-bottom-color: var(--line);
   box-shadow: var(--shadow-whisper);
-  backdrop-filter: blur(14px) saturate(1.05);
-  -webkit-backdrop-filter: blur(14px) saturate(1.05);
   color: var(--ink);
+}
+
+/* Desktop-only frosted glass — mobile pays heavily for continuous backdrop blur */
+@media (hover: hover) and (pointer: fine) {
+  .site-header.scrolled,
+  body:not(.page-index) .site-header {
+    background: color-mix(in srgb, var(--paper) 88%, transparent);
+    backdrop-filter: blur(10px) saturate(1.04);
+    -webkit-backdrop-filter: blur(10px) saturate(1.04);
+  }
 }
 
 .site-header.scrolled .brand img,
@@ -900,14 +921,59 @@ html[dir="ltr"] .head-cta:focus-visible i {
   transform: translate3d(0, 0.7rem, 0);
 }
 
-/* Legacy decorative hooks — removed from composition */
-.menu-silk,
-.menu-silk-wave,
+.menu-silk {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  overflow: hidden;
+  border-radius: inherit;
+}
+
+.menu-silk img,
+.menu-silk-wave {
+  position: absolute;
+  display: block;
+  max-width: none;
+  pointer-events: none;
+  user-select: none;
+  -webkit-user-drag: none;
+}
+
+/* Single silk composition — dissolve lives in the SVG, not clip-path */
+.menu-silk-wave {
+  top: -10%;
+  inset-inline-start: -22%;
+  width: min(118%, 420px);
+  height: auto;
+  aspect-ratio: 400 / 460;
+  object-fit: contain;
+  object-position: left top;
+  opacity: 0;
+  transform: translate3d(-10px, -14px, 0) scale(1.02);
+  transform-origin: top left;
+  transition:
+    opacity 0.7s var(--ease-silk),
+    transform 0.85s var(--ease-silk);
+}
+
+/* Legacy multi-layer hooks — composition is now one wave */
 .menu-silk-full,
 .menu-silk-top,
-.menu-silk-bot,
-.menu-ico {
-  display: none !important;
+.menu-silk-bot {
+  display: none;
+}
+
+.drawer[open].is-open .menu-silk-wave {
+  opacity: 1;
+  transform: none;
+  transition-delay: 90ms;
+}
+
+.drawer[open].is-closing .menu-silk-wave {
+  opacity: 0;
+  transition-delay: 0ms;
+  transition-duration: 0.28s;
 }
 
 .menu-chrome,
@@ -1030,13 +1096,13 @@ html[dir="ltr"] .head-cta:focus-visible i {
 .menu-link {
   position: relative;
   display: flex;
-  align-items: baseline;
-  justify-content: flex-start;
-  gap: 0;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.9rem;
   width: 100%;
   min-height: 0;
   padding-block: clamp(0.72rem, 1.8vh, 1.05rem);
-  padding-inline: 0.85rem 0;
+  padding-inline: 0.85rem 0.15rem;
   border-radius: 0;
   background: transparent;
   box-shadow: none;
@@ -1067,14 +1133,27 @@ html[dir="ltr"] .head-cta:focus-visible i {
 }
 
 .menu-link-label {
-  flex: 0 1 auto;
+  flex: 1 1 auto;
   text-align: start;
+}
+
+.menu-ico {
+  width: 1.15rem;
+  height: 1.15rem;
+  flex-shrink: 0;
+  color: color-mix(in srgb, var(--garnet) 62%, var(--muted));
+  transition: color 0.32s var(--menu-ease);
 }
 
 .menu-link:hover,
 .menu-link:focus-visible {
   color: var(--garnet);
   background: transparent;
+}
+
+.menu-link:hover .menu-ico,
+.menu-link:focus-visible .menu-ico {
+  color: var(--garnet);
 }
 
 .menu-link:focus-visible {
@@ -1111,6 +1190,10 @@ html[dir="ltr"] .head-cta:focus-visible i {
 .menu-link[aria-current="page"]::after {
   content: none;
   display: none;
+}
+
+.menu-link[aria-current="page"] .menu-ico {
+  color: var(--garnet);
 }
 
 /* —— Lower zone: conversion —— */
@@ -1264,6 +1347,18 @@ html[dir="ltr"] .menu-cta:focus-visible .menu-cta-arrow {
   opacity: 0.7;
 }
 
+html[dir="ltr"] .menu-silk-wave {
+  inset-inline-start: auto;
+  inset-inline-end: -22%;
+  object-position: right top;
+  transform: translate3d(10px, -14px, 0) scaleX(-1) scale(1.02);
+  transform-origin: top right;
+}
+
+html[dir="ltr"] .drawer[open].is-open .menu-silk-wave {
+  transform: scaleX(-1);
+}
+
 html[dir="ltr"] .menu-link {
   font-family: var(--english-display);
   font-weight: 300;
@@ -1315,6 +1410,19 @@ html[dir="ltr"] .menu-cta {
   }
 }
 
+@media (max-width: 1024px) {
+  .menu-silk-wave {
+    top: -8%;
+    inset-inline-start: -20%;
+    width: min(112%, 380px);
+  }
+
+  html[dir="ltr"] .menu-silk-wave {
+    inset-inline-start: auto;
+    inset-inline-end: -20%;
+  }
+}
+
 @media (max-height: 700px) {
   .drawer-panel {
     gap: clamp(0.85rem, 3.5vh, 1.35rem);
@@ -1335,6 +1443,10 @@ html[dir="ltr"] .menu-cta {
 
   .menu-cta {
     min-height: 48px;
+  }
+
+  .drawer[open].is-open .menu-silk-wave {
+    opacity: 0.88;
   }
 }
 
@@ -1359,12 +1471,22 @@ html[dir="ltr"] .menu-cta {
   .menu-foot {
     gap: 0.75rem;
   }
+
+  .menu-silk-wave {
+    width: min(100%, 340px);
+  }
+
+  .drawer[open].is-open .menu-silk-wave {
+    opacity: 0.72;
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {
   .drawer,
   .drawer::backdrop,
   .drawer-panel,
+  .menu-silk,
+  .menu-silk-wave,
   .menu-chrome,
   .menu-link,
   .menu-foot,
@@ -1391,12 +1513,17 @@ html[dir="ltr"] .menu-cta {
     opacity: 0;
   }
 
+  .menu-silk-wave,
   .menu-chrome,
   .menu-link,
   .menu-foot {
     opacity: 1 !important;
     transform: none !important;
     transition-delay: 0ms !important;
+  }
+
+  html[dir="ltr"] .menu-silk-wave {
+    transform: scaleX(-1) !important;
   }
 }
 
@@ -1646,6 +1773,8 @@ html[dir="ltr"] .academy-intro h2 {
   clip-path: url(#academy-course-mask-desktop);
   -webkit-clip-path: url(#academy-course-mask-desktop);
   background: var(--blush);
+  contain: paint;
+  isolation: isolate;
 }
 
 .academy-flagship-media img,
@@ -1656,6 +1785,12 @@ html[dir="ltr"] .academy-intro h2 {
   height: 100%;
   object-fit: cover;
   display: block;
+}
+
+/* Promote playing video only — avoids permanent layer memory tax */
+.academy-flagship-media.is-live .academy-flagship-video {
+  transform: translateZ(0);
+  backface-visibility: hidden;
 }
 
 .academy-flagship-poster {
@@ -1683,9 +1818,7 @@ html[dir="ltr"] .academy-intro h2 {
   border-radius: 50%;
   cursor: pointer;
   color: var(--ivory);
-  background: color-mix(in srgb, var(--deep) 42%, transparent);
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
+  background: color-mix(in srgb, var(--deep) 55%, transparent);
   opacity: 0;
   transform: translateY(2px);
   transition:
@@ -2900,6 +3033,22 @@ html[dir="rtl"] .product-editorial--lead .product-media {
   isolation: isolate;
   /* Contain silk to the continuous canvas — free across internal section seams */
   overflow: hidden;
+  content-visibility: auto;
+  contain-intrinsic-size: 1px 1600px;
+}
+
+.freedom,
+.about-portrait,
+.academy {
+  content-visibility: auto;
+  contain-intrinsic-size: 1px 900px;
+}
+
+/* Keep academy intrinsic taller on desktop flagship layouts */
+@media (min-width: 901px) {
+  .academy {
+    contain-intrinsic-size: 1px 1100px;
+  }
 }
 
 .closing-silk {
@@ -2916,9 +3065,25 @@ html[dir="rtl"] .product-editorial--lead .product-media {
   height: auto;
   max-width: none;
   pointer-events: none;
-  mix-blend-mode: multiply;
+  /* Multiply only while canvas is on-screen — continuous blend paints every scroll frame */
+  mix-blend-mode: normal;
   user-select: none;
   -webkit-user-drag: none;
+  content-visibility: auto;
+  contain-intrinsic-size: 300px 130px;
+}
+
+.closing-canvas.is-in .closing-silk img,
+.closing-canvas:not(.js-defer-blend) .closing-silk img {
+  mix-blend-mode: multiply;
+}
+
+@media (max-width: 760px) {
+  .closing-canvas.is-in .closing-silk img {
+    /* Soft multiply substitute — cheaper on mobile GPUs */
+    mix-blend-mode: normal;
+    opacity: 0.42;
+  }
 }
 
 /* Upper silk: straddles curated→CTA seam; physical upper-left in RTL (inline-end) */
@@ -3031,10 +3196,10 @@ html[dir="ltr"] .curated-head h2 {
   outline-offset: 3px;
 }
 
-/* —— Studio: flagship photographic card —— */
+/* —— Studio: cinematic editorial campaign poster —— */
 
 .xp--studio {
-  background: var(--deep);
+  background: var(--garnet);
   color: #fff;
   display: flex;
   flex-direction: column;
@@ -3053,15 +3218,21 @@ html[dir="ltr"] .curated-head h2 {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  object-position: 32% 22%;
+  /* Seham centered as hero — face + arched neck primary; crouch preserved */
+  object-position: 50% 28%;
   transform: scale(1.02);
-  transition: transform 0.85s var(--ease-silk);
+  transform-origin: 50% 36%;
+  transition:
+    transform 0.9s var(--ease-silk),
+    opacity 0.9s var(--ease-silk);
 }
 
 html[dir="ltr"] .xp-media img {
-  object-position: 36% 20%;
+  object-position: 48% 26%;
+  transform-origin: 48% 34%;
 }
 
+/* Restrained burgundy floor — readability only, photograph remains dominant */
 .xp--studio::after {
   content: "";
   position: absolute;
@@ -3070,8 +3241,9 @@ html[dir="ltr"] .xp-media img {
   pointer-events: none;
   background: linear-gradient(
     to top,
-    color-mix(in srgb, var(--deep) 78%, transparent) 0%,
-    color-mix(in srgb, var(--deep) 18%, transparent) 34%,
+    color-mix(in srgb, var(--garnet) 76%, transparent) 0%,
+    color-mix(in srgb, var(--garnet) 42%, transparent) 22%,
+    color-mix(in srgb, var(--garnet) 14%, transparent) 42%,
     transparent 58%
   );
 }
@@ -3079,27 +3251,15 @@ html[dir="ltr"] .xp-media img {
 .xp--studio .xp-copy {
   position: relative;
   z-index: 2;
-  padding: clamp(1.35rem, 2.6vw, 2rem);
+  padding: clamp(1.35rem, 2.6vw, 2.05rem);
+  padding-block-end: clamp(1.4rem, 2.5vw, 1.95rem);
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  gap: 0.42rem;
-  max-width: min(100%, 32ch);
-}
-
-.xp--studio small {
-  color: color-mix(in srgb, var(--rose) 78%, #fff);
-}
-
-.xp--studio h3 {
-  color: #fff;
-  font-size: clamp(1.7rem, 2.7vw, 2.55rem);
-}
-
-.xp--studio p {
-  color: color-mix(in srgb, #fff 82%, transparent);
-  max-width: 28ch;
-  font-size: clamp(0.9rem, 1.05vw, 1rem);
+  gap: 0.38rem;
+  max-width: min(100%, 34ch);
+  background: transparent;
+  text-align: start;
 }
 
 /* —— Shared editorial photo panel —— */
@@ -3290,6 +3450,48 @@ html[dir="ltr"] .xp h3 {
   line-height: 1.55;
 }
 
+/* Studio type — after shared rules so ivory/rose contrast wins on photography */
+.xp.xp--studio small {
+  color: color-mix(in srgb, var(--rose) 42%, #fff 58%);
+  font-size: 0.72rem;
+  letter-spacing: 0.06em;
+  margin-bottom: 0.15rem;
+  text-shadow: 0 1px 18px color-mix(in srgb, var(--garnet) 40%, transparent);
+}
+
+html[dir="ltr"] .xp.xp--studio small {
+  letter-spacing: 0.12em;
+  font-size: 0.64rem;
+}
+
+.xp.xp--studio h3 {
+  color: var(--ivory);
+  font-size: clamp(1.85rem, 2.9vw, 2.7rem);
+  line-height: 1.18;
+  letter-spacing: 0;
+  text-shadow: 0 1px 24px color-mix(in srgb, var(--garnet) 40%, transparent);
+}
+
+html[dir="ltr"] .xp.xp--studio h3 {
+  letter-spacing: 0.09em;
+  line-height: 1.12;
+}
+
+.xp.xp--studio p {
+  color: color-mix(in srgb, var(--ivory) 84%, transparent);
+  max-width: 30ch;
+  font-size: clamp(0.92rem, 1.1vw, 1.02rem);
+  line-height: 1.5;
+  margin-top: 0.08rem;
+  text-shadow: 0 1px 16px color-mix(in srgb, var(--garnet) 30%, transparent);
+}
+
+.xp.xp--studio .xp-cta {
+  margin-top: 0.85rem;
+  border-radius: var(--radius-btn);
+  box-shadow: none;
+}
+
 .xp-cta {
   display: inline-flex;
   align-items: center;
@@ -3336,6 +3538,12 @@ html[dir="ltr"] .xp h3 {
   transform: scale(1.06);
 }
 
+/* Studio: quieter Ken Burns — never pan away from Seham */
+.xp--studio:hover .xp-media img,
+.xp--studio:focus-visible .xp-media img {
+  transform: scale(1.035);
+}
+
 @media (hover: hover) and (pointer: fine) {
   .xp--coach:hover,
   .xp--gift:hover {
@@ -3347,7 +3555,8 @@ html[dir="ltr"] .xp h3 {
 .xp--studio:focus-visible .xp-cta {
   background: #fff;
   color: var(--garnet);
-  box-shadow: 0 8px 22px color-mix(in srgb, var(--deep) 18%, transparent);
+  box-shadow: 0 4px 16px color-mix(in srgb, var(--garnet) 16%, transparent);
+  transform: translateY(-1px);
 }
 
 .xp--coach:hover .xp-cta--solid,
@@ -3382,11 +3591,25 @@ html[dir="ltr"] .xp:focus-visible .xp-arrow {
     transform 0.7s var(--ease-silk);
 }
 
+/* Studio: cinematic uncover — soft scale + opacity, then type cascade */
 .js-motion .xp--studio {
-  transform: translateY(20px) scale(0.988);
+  transform: translateY(18px) scale(0.985);
   transition:
-    opacity 0.78s var(--ease-silk),
-    transform 0.78s var(--ease-silk);
+    opacity 0.82s var(--ease-silk),
+    transform 0.82s var(--ease-silk);
+}
+
+.js-motion .xp--studio .xp-media img {
+  opacity: 0;
+  transform: scale(1.05);
+}
+
+.js-motion .xp--studio .xp-copy > * {
+  opacity: 0;
+  transform: translateY(10px);
+  transition:
+    opacity 0.58s var(--ease-silk),
+    transform 0.58s var(--ease-silk);
 }
 
 .js-motion .curated.is-in .curated-head {
@@ -3400,7 +3623,42 @@ html[dir="ltr"] .xp:focus-visible .xp-arrow {
 }
 
 .js-motion .curated.is-in .xp--studio {
-  transition-delay: 70ms;
+  transition-delay: 60ms;
+}
+
+.js-motion .curated.is-in .xp--studio .xp-media img {
+  opacity: 1;
+  transform: scale(1.02);
+  transition-delay: 40ms;
+}
+
+.js-motion .curated.is-in .xp--studio:hover .xp-media img,
+.js-motion .curated.is-in .xp--studio:focus-visible .xp-media img {
+  transform: scale(1.035);
+}
+
+.js-motion .curated.is-in .xp--studio .xp-copy > *:nth-child(1) {
+  opacity: 1;
+  transform: none;
+  transition-delay: 160ms;
+}
+
+.js-motion .curated.is-in .xp--studio .xp-copy > *:nth-child(2) {
+  opacity: 1;
+  transform: none;
+  transition-delay: 230ms;
+}
+
+.js-motion .curated.is-in .xp--studio .xp-copy > *:nth-child(3) {
+  opacity: 1;
+  transform: none;
+  transition-delay: 290ms;
+}
+
+.js-motion .curated.is-in .xp--studio .xp-copy > *:nth-child(4) {
+  opacity: 1;
+  transform: none;
+  transition-delay: 350ms;
 }
 
 .js-motion .curated.is-in .xp--coach {
@@ -3422,7 +3680,36 @@ html[dir="ltr"] .xp:focus-visible .xp-arrow {
   }
 }
 
-/* —— Tablet: studio full-bleed, pair below —— */
+/* Desktop flagship — more headroom, type anchored in the lower third */
+@media (min-width: 1025px) {
+  .xp-media img {
+    object-position: 50% 22%;
+  }
+
+  html[dir="ltr"] .xp-media img {
+    object-position: 48% 20%;
+  }
+
+  .xp--studio::after {
+    background: linear-gradient(
+      to top,
+      color-mix(in srgb, var(--garnet) 72%, transparent) 0%,
+      color-mix(in srgb, var(--garnet) 38%, transparent) 20%,
+      color-mix(in srgb, var(--garnet) 12%, transparent) 38%,
+      transparent 54%
+    );
+  }
+
+  .xp--studio .xp-copy {
+    max-width: min(100%, 32ch);
+  }
+
+  .xp.xp--studio h3 {
+    font-size: clamp(1.95rem, 2.6vw, 2.75rem);
+  }
+}
+
+/* —— Tablet: studio full-bleed poster, pair below —— */
 @media (max-width: 1024px) {
   .curated-stage {
     grid-template-columns: 1fr;
@@ -3431,7 +3718,32 @@ html[dir="ltr"] .xp:focus-visible .xp-arrow {
   }
 
   .xp--studio {
-    min-height: clamp(380px, 52vw, 520px);
+    width: 100%;
+    aspect-ratio: 5 / 6;
+    min-height: 0;
+    height: auto;
+    max-height: min(560px, 70svh);
+  }
+
+  .xp-media img {
+    object-position: 50% 24%;
+  }
+
+  html[dir="ltr"] .xp-media img {
+    object-position: 48% 22%;
+  }
+
+  .xp--studio .xp-copy {
+    max-width: min(100%, 38ch);
+    padding: clamp(1.5rem, 3vw, 2.1rem);
+  }
+
+  .xp.xp--studio h3 {
+    font-size: clamp(2rem, 4.2vw, 2.55rem);
+  }
+
+  .xp--studio .xp-cta {
+    width: auto;
   }
 
   .curated-secondary {
@@ -3476,38 +3788,79 @@ html[dir="ltr"] .xp:focus-visible .xp-arrow {
     min-height: 0;
   }
 
+  /* Studio: mobile campaign poster — one plane, not a stacked UI card */
   .xp--studio {
+    width: 100%;
+    /* Aspect alone drives height — never pair with a taller min-height (overflow) */
+    aspect-ratio: 4 / 5;
     min-height: 0;
-    display: grid;
-    grid-template-rows: minmax(240px, 58vw) auto;
+    height: auto;
+    max-height: min(560px, 78svh);
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
     border-radius: clamp(24px, 6vw, 32px);
   }
 
   .xp-media {
-    position: relative;
-    inset: auto;
-    min-height: 240px;
-    aspect-ratio: 4 / 5;
-    max-height: 380px;
-    border-radius: clamp(24px, 6vw, 32px) clamp(24px, 6vw, 32px) 0 0;
+    position: absolute;
+    inset: 0;
+    min-height: 0;
+    aspect-ratio: auto;
+    max-height: none;
+    border-radius: inherit;
   }
 
   .xp-media img {
-    object-position: 40% 18%;
+    object-position: 50% 30%;
+  }
+
+  html[dir="ltr"] .xp-media img {
+    object-position: 48% 28%;
   }
 
   .xp--studio::after {
     background: linear-gradient(
       to top,
-      color-mix(in srgb, var(--deep) 48%, transparent) 0%,
-      transparent 58%
+      color-mix(in srgb, var(--garnet) 78%, transparent) 0%,
+      color-mix(in srgb, var(--garnet) 48%, transparent) 26%,
+      color-mix(in srgb, var(--garnet) 16%, transparent) 46%,
+      transparent 62%
     );
   }
 
   .xp--studio .xp-copy {
     max-width: none;
-    background: var(--deep);
-    padding: 1.2rem 1.2rem 1.4rem;
+    width: 100%;
+    background: transparent;
+    padding: 1.35rem 1.2rem 1.45rem;
+    gap: 0.36rem;
+  }
+
+  .xp.xp--studio small {
+    margin-bottom: 0.2rem;
+  }
+
+  .xp.xp--studio h3 {
+    font-size: clamp(1.85rem, 7.2vw, 2.35rem);
+    line-height: 1.22;
+    max-width: 12ch;
+  }
+
+  html[dir="ltr"] .xp.xp--studio h3 {
+    max-width: 14ch;
+    line-height: 1.14;
+  }
+
+  .xp.xp--studio p {
+    max-width: 30ch;
+    font-size: clamp(0.92rem, 3.6vw, 1rem);
+  }
+
+  .xp.xp--studio .xp-cta {
+    margin-top: 0.9rem;
+    width: auto;
+    max-width: 100%;
   }
 
   /* Portrait photo on top — full-bleed, not a side strip */
@@ -3602,13 +3955,25 @@ html[dir="ltr"] .xp:focus-visible .xp-arrow {
   }
 
   .xp--studio {
-    grid-template-rows: minmax(220px, 72vw) auto;
+    aspect-ratio: 4 / 5;
+    min-height: 0;
+    max-height: min(540px, 76svh);
   }
 
-  .xp-media {
-    aspect-ratio: 5 / 6;
-    max-height: 320px;
-    border-radius: 26px 26px 0 0;
+  .xp-media img {
+    object-position: 50% 32%;
+  }
+
+  html[dir="ltr"] .xp-media img {
+    object-position: 48% 30%;
+  }
+
+  .xp--studio .xp-copy {
+    padding: 1.25rem 1.1rem calc(1.3rem + env(safe-area-inset-bottom, 0px));
+  }
+
+  .xp.xp--studio h3 {
+    font-size: clamp(1.75rem, 7.8vw, 2.15rem);
   }
 
   .xp--coach .xp-photo,
@@ -3638,11 +4003,21 @@ html[dir="ltr"] .xp:focus-visible .xp-arrow {
     margin-top: 0.45rem;
     padding: 0.6rem 1.1rem;
   }
+
+  .xp.xp--studio .xp-cta {
+    min-height: 48px;
+    margin-top: 0.85rem;
+    padding: 0.65rem 1.15rem;
+  }
 }
 
 @media (max-width: 360px) {
-  .xp--studio h3 {
-    font-size: 1.55rem;
+  .xp--studio {
+    max-height: min(480px, 78svh);
+  }
+
+  .xp.xp--studio h3 {
+    font-size: 1.65rem;
   }
 
   .xp--coach .xp-photo,
@@ -3655,7 +4030,9 @@ html[dir="ltr"] .xp:focus-visible .xp-arrow {
 @media (prefers-reduced-motion: reduce) {
   .js-motion .curated-head,
   .js-motion .xp,
-  .js-motion .xp--studio {
+  .js-motion .xp--studio,
+  .js-motion .xp--studio .xp-media img,
+  .js-motion .xp--studio .xp-copy > * {
     opacity: 1;
     transform: none;
     transition: none;
