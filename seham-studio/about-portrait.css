@@ -486,34 +486,34 @@ html[dir="ltr"] .about-portrait .ap-cta {
 }
 
 .about-portrait.ap-js .ap-name {
-  transition-delay: 0.35s;
+  transition-delay: 0.18s;
 }
 
 .about-portrait.ap-js .ap-name::before,
 .about-portrait.ap-js .ap-name::after {
   transform: scaleX(0);
-  transition: transform 0.9s var(--ap-ease) 0.5s;
+  transition: transform 0.7s var(--ap-ease) 0.28s;
 }
 
 .about-portrait.ap-js .ap-line-in {
   transform: translateY(112%);
-  transition: transform 1.15s var(--ap-ease) 0.42s;
+  transition: transform 0.85s var(--ap-ease) 0.22s;
 }
 
 .about-portrait.ap-js .ap-line--soft .ap-line-in {
-  transition-delay: 0.56s;
+  transition-delay: 0.32s;
 }
 
 .about-portrait.ap-js .ap-bio {
-  transition-delay: 0.85s;
+  transition-delay: 0.42s;
 }
 
 .about-portrait.ap-js .ap-cta {
   opacity: 0;
-  transform: translateY(14px);
+  transform: translateY(10px);
   transition:
-    opacity 0.8s ease 1.05s,
-    transform 1s var(--ap-ease) 1.05s,
+    opacity 0.55s ease 0.55s,
+    transform 0.65s var(--ap-ease) 0.55s,
     background-color 0.35s ease;
 }
 

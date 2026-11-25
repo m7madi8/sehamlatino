@@ -17,10 +17,17 @@
       requestAnimationFrame(() => {
         section.classList.add("ap-in");
         // after the entrance, give the CTA instant hover/press feedback again
-        setTimeout(() => section.classList.add("ap-done"), 2400);
+        setTimeout(() => section.classList.add("ap-done"), 1800);
       })
     );
   };
+
+  /* Seed immediately if already near viewport — avoid invisible section on fast scroll */
+  const top = section.getBoundingClientRect().top;
+  if (top < innerHeight * 0.96) {
+    reveal();
+    return;
+  }
 
   const io = new IntersectionObserver(
     (entries) => {
@@ -29,8 +36,19 @@
         reveal();
       }
     },
-    { threshold: 0.28, rootMargin: "0px 0px -4% 0px" }
+    { threshold: 0.08, rootMargin: "18% 0px 10% 0px" }
   );
   io.observe(section);
 
+  /* Failsafe — never leave portrait content permanently opacity:0 */
+  window.setTimeout(() => {
+    if (!revealed) {
+      try {
+        io.disconnect();
+      } catch (_) {
+        /* ignore */
+      }
+      reveal();
+    }
+  }, 2400);
 })();

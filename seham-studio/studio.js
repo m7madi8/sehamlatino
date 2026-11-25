@@ -570,11 +570,12 @@
           }
         });
       },
-      { threshold: 0.1, rootMargin: "0px 0px -6% 0px" }
+      /* Eager unlock — empty sections during fast scroll are worse than soft motion */
+      { threshold: 0.01, rootMargin: "12% 0px 8% 0px" }
     );
     nodes.forEach((n) => {
       n.classList.add("motion-ready");
-      if (n.getBoundingClientRect().top < innerHeight * 0.92) {
+      if (n.getBoundingClientRect().top < innerHeight * 0.98) {
         n.classList.add("is-visible");
       } else {
         io.observe(n);
@@ -592,13 +593,24 @@
             }
           });
         },
-        { threshold: 0.18, rootMargin: "0px 0px -8% 0px" }
+        { threshold: 0.04, rootMargin: "16% 0px 10% 0px" }
       );
       sectionalIn.forEach((el) => {
-        if (el.getBoundingClientRect().top < innerHeight * 0.88) {
+        if (el.getBoundingClientRect().top < innerHeight * 0.96) {
           el.classList.add("is-in");
         } else {
           sectionalIo.observe(el);
+          /* Failsafe: never leave academy/curated permanently invisible */
+          window.setTimeout(() => {
+            if (!el.classList.contains("is-in")) {
+              el.classList.add("is-in");
+              try {
+                sectionalIo.unobserve(el);
+              } catch (_) {
+                /* already disconnected */
+              }
+            }
+          }, 2200);
         }
       });
     }
@@ -614,9 +626,9 @@
             }
           });
         },
-        { threshold: 0.12, rootMargin: "0px 0px -6% 0px" }
+        { threshold: 0.04, rootMargin: "12% 0px 8% 0px" }
       );
-      if (closingCanvas.getBoundingClientRect().top < innerHeight * 0.9) {
+      if (closingCanvas.getBoundingClientRect().top < innerHeight * 0.96) {
         closingCanvas.classList.add("is-in");
       } else {
         canvasIo.observe(closingCanvas);
@@ -995,6 +1007,7 @@
 
   const video = hero.querySelector(".hero-cinema-video");
   const still = hero.querySelector(".hero-still");
+  const stage = hero.querySelector(".hero-stage");
   if (!video) return;
 
   const reduceMotion = matchMedia("(prefers-reduced-motion: reduce)").matches;
@@ -1009,11 +1022,18 @@
   let inView = true;
   let entered = false;
   let stillArmed = false;
+  let wasMobile = mobileMq.matches;
+  let mqTimer = 0;
 
   function markEntered() {
     if (entered) return;
     entered = true;
     hero.classList.add("is-cinema-entered");
+  }
+
+  function paintPoster() {
+    if (!stage || !poster) return;
+    stage.style.backgroundImage = 'url("' + poster + '")';
   }
 
   function armStill() {
@@ -1036,7 +1056,8 @@
   }
 
   function disarm() {
-    hero.classList.remove("is-cinema-ready", "is-cinema-live");
+    /* Only tear down when leaving the mobile cinema path — never on scroll */
+    hero.classList.remove("is-cinema-live");
     if (!video.paused) video.pause();
     video.removeAttribute("src");
     video.removeAttribute("poster");
@@ -1047,11 +1068,13 @@
       /* ignore */
     }
     armed = false;
+    /* Keep is-cinema-ready so poster/stage remains painted — no black flash */
   }
 
   function arm() {
     if (armed || !src || reduceMotion || saveData) return;
     armed = true;
+    paintPoster();
     if (poster) video.setAttribute("poster", poster);
     const source = document.createElement("source");
     source.src = src;
@@ -1066,7 +1089,7 @@
     try {
       video.load();
     } catch (_) {
-      /* keep still frame */
+      /* keep poster */
     }
   }
 
@@ -1088,6 +1111,7 @@
   }
 
   function pauseSoftly() {
+    /* Keep last decoded frame — do not remount or clear ready state */
     if (!video.paused) video.pause();
     hero.classList.remove("is-cinema-live");
   }
@@ -1095,12 +1119,14 @@
   function syncViewport() {
     armStill();
     if (!mobileMq.matches) {
-      disarm();
+      if (wasMobile) disarm();
+      wasMobile = false;
       markEntered();
       return;
     }
+    wasMobile = true;
+    paintPoster();
     if (reduceMotion || saveData) {
-      /* Poster-only fallback — no video decode on reduced-data / reduced-motion */
       if (poster) video.setAttribute("poster", poster);
       hero.classList.add("is-cinema-ready");
       markEntered();
@@ -1127,7 +1153,7 @@
     const io = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
-          inView = entry.isIntersecting && entry.intersectionRatio >= 0.2;
+          inView = entry.isIntersecting && entry.intersectionRatio >= 0.15;
           if (inView) {
             tryPlay();
           } else {
@@ -1135,7 +1161,7 @@
           }
         });
       },
-      { threshold: [0, 0.2, 0.55], rootMargin: "10% 0px" }
+      { threshold: [0, 0.15, 0.4], rootMargin: "12% 0px" }
     );
     io.observe(hero);
   } else if (!reduceMotion) {
@@ -1150,20 +1176,24 @@
     }
   });
 
-  const onViewportChange = () => syncViewport();
+  const onViewportChange = () => {
+    /* Debounce MQ flips (orientation / split-view) to avoid remount thrash */
+    clearTimeout(mqTimer);
+    mqTimer = window.setTimeout(syncViewport, 180);
+  };
   if (typeof mobileMq.addEventListener === "function") {
     mobileMq.addEventListener("change", onViewportChange);
   } else if (typeof mobileMq.addListener === "function") {
     mobileMq.addListener(onViewportChange);
   }
 
-  /* Defer arming until after first paint so desktop never downloads mobile film */
+  /* Paint poster before first film frame; enter copy quickly */
+  paintPoster();
   requestAnimationFrame(() => {
     if (!mobileMq.matches || reduceMotion || saveData) {
       markEntered();
     } else {
-      /* Ensure copy enters even if autoplay is blocked */
-      setTimeout(markEntered, 1200);
+      window.setTimeout(markEntered, 480);
     }
     syncViewport();
   });
