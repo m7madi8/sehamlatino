@@ -439,7 +439,8 @@ html[dir="ltr"] .about-portrait .ap-cta {
     font-size: clamp(16.5px, 4.2vw, 22px);
   }
 
-  .about-portrait .ap-cta-arrow {
+  .about-portrait .ap-cta-arrow,
+  .about-portrait .ap-cta .cta-arrow {
     width: clamp(15px, 3.6vw, 20px);
     height: clamp(15px, 3.6vw, 20px);
   }
