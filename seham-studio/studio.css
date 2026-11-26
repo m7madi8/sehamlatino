@@ -1637,7 +1637,8 @@ html[dir="ltr"] .menu-cta {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  object-position: center 42%;
+  /* Desktop campaign still: subject on the left, copy space on the right */
+  object-position: 18% 42%;
   animation: heroReveal 1.4s var(--ease-soft) both;
   background: var(--deep);
 }
@@ -1661,19 +1662,23 @@ html[dir="ltr"] .menu-cta {
   inset: 0;
   z-index: 1;
   background:
-    linear-gradient(180deg, color-mix(in srgb, var(--deep) 48%, transparent) 0%, transparent 36%, color-mix(in srgb, var(--deep) 86%, transparent) 100%),
-    linear-gradient(to right, color-mix(in srgb, var(--deep) 62%, transparent) 0%, transparent 52%);
+    linear-gradient(180deg, color-mix(in srgb, var(--deep) 22%, transparent) 0%, transparent 36%, color-mix(in srgb, var(--deep) 72%, transparent) 100%),
+    linear-gradient(to right, color-mix(in srgb, var(--deep) 28%, transparent) 0%, transparent 42%);
   pointer-events: none;
 }
 
 html[dir="rtl"] .hero-stage::after {
   background:
-    linear-gradient(180deg, color-mix(in srgb, var(--deep) 48%, transparent) 0%, transparent 36%, color-mix(in srgb, var(--deep) 86%, transparent) 100%),
-    linear-gradient(to left, color-mix(in srgb, var(--deep) 62%, transparent) 0%, transparent 52%);
+    linear-gradient(180deg, color-mix(in srgb, var(--deep) 22%, transparent) 0%, transparent 36%, color-mix(in srgb, var(--deep) 72%, transparent) 100%),
+    linear-gradient(to left, color-mix(in srgb, var(--deep) 48%, transparent) 0%, transparent 52%);
 }
 
 html[dir="rtl"] .hero-stage .hero-still {
-  object-position: 42% 42%;
+  object-position: 18% 42%;
+}
+
+html[dir="ltr"] .hero-stage .hero-still {
+  object-position: 22% 42%;
 }
 
 .hero-content {
