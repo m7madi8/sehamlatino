@@ -1197,4 +1197,30 @@
     }
     syncViewport();
   });
+
+  /* ---------- Course page: mobile enroll bar visibility ---------- */
+  if (document.body.classList.contains("page-online-course")) {
+    const bar = document.querySelector("[data-course-bar]");
+    const enroll = document.querySelector("[data-course-enroll]");
+    if (bar && enroll && "IntersectionObserver" in window) {
+      const syncBar = (hidden) => {
+        bar.classList.toggle("is-hidden", hidden);
+        bar.setAttribute("aria-hidden", hidden ? "true" : "false");
+      };
+      const io = new IntersectionObserver(
+        (entries) => {
+          const entry = entries[0];
+          syncBar(Boolean(entry && entry.isIntersecting));
+        },
+        { threshold: 0.28, rootMargin: "0px 0px -8% 0px" }
+      );
+      io.observe(enroll);
+      if (drawer) {
+        drawer.addEventListener("toggle", () => {
+          if (drawer.open) syncBar(true);
+        });
+      }
+    }
+  }
+
 })();

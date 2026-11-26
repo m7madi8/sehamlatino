@@ -21,7 +21,7 @@ Creative direction: **Cadencia Íntima** — Bachata’s measure (anticipation, 
 Home, Academy, Course detail, Studio classes, Coaching, About, Videos, Membership, Gift, Contact, FAQ, Register, Privacy, Accessibility, Library, Account, Checkout, Lesson preview.
 
 ## Scope
-Front-end only. Purchases, authentication, gift vouchers, membership waitlist, coaching applications, and video playback continue on [sehamlatino.com](https://sehamlatino.com). Checkout currency toggle is display-only. Lesson room is a curriculum preview, not a video player.
+Standalone static front-end for the new Seham Latino project. Checkout currency toggle is display-only. Lesson room is a curriculum preview, not a full video player.
 
 ## Design notes
 - Palette: garnet `#5C1A32`, paper `#F6EEE6`, blush `#E8D5CF`, ink `#2C1A1C`, night `#241018`.
@@ -36,4 +36,4 @@ Front-end only. Purchases, authentication, gift vouchers, membership waitlist, c
 - Drawer open/close, focus return, scroll header, and lesson/currency hooks preserved.
 - Fonts not bundled — 404 expected until `fonts/` is copied.
 
-Sources: original project assets and public content at https://sehamlatino.com/
+Sources: project photography, logos, and studio assets bundled in this repository.
