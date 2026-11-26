@@ -826,6 +826,46 @@
 })();
 
 (() => {
+  const section = document.querySelector(".freedom[data-freedom-portrait]");
+  if (!section || !section.querySelector(".freedom-portrait-img")) return;
+  if (!("IntersectionObserver" in window)) {
+    section.classList.add("is-portrait-in");
+    return;
+  }
+  if (matchMedia("(prefers-reduced-motion: reduce)").matches) {
+    section.classList.add("is-portrait-in");
+    return;
+  }
+  if (matchMedia("(max-width: 1199.98px)").matches) {
+    section.classList.add("is-portrait-in");
+    return;
+  }
+
+  let done = false;
+  const enter = () => {
+    if (done) return;
+    done = true;
+    requestAnimationFrame(() => section.classList.add("is-portrait-in"));
+  };
+
+  if (section.getBoundingClientRect().top < innerHeight * 0.92) {
+    enter();
+    return;
+  }
+
+  const io = new IntersectionObserver(
+    (entries) => {
+      if (entries.some((e) => e.isIntersecting)) {
+        io.disconnect();
+        enter();
+      }
+    },
+    { threshold: 0.18, rootMargin: "8% 0px" }
+  );
+  io.observe(section);
+})();
+
+(() => {
   const price = document.querySelector("#order-price");
   if (price) {
     document.querySelectorAll("input[name=currency]").forEach((x) =>
@@ -856,16 +896,12 @@
   if (!media) return;
 
   const video = media.querySelector(".academy-flagship-video");
-  const toggle = media.querySelector("[data-living-toggle]");
   if (!video) return;
 
   const reduceMotion = matchMedia("(prefers-reduced-motion: reduce)").matches;
   const saveData =
     (navigator.connection && navigator.connection.saveData) ||
     matchMedia("(prefers-reduced-data: reduce)").matches;
-  const isArabic = (document.documentElement.lang || "").startsWith("ar");
-  const labelPause = isArabic ? "إيقاف الحركة المستمرة" : "Pause continuous motion";
-  const labelPlay = isArabic ? "تشغيل الحركة" : "Play motion";
   const lazySrc = video.getAttribute("data-src");
 
   let inView = false;
@@ -874,17 +910,18 @@
 
   if (reduceMotion || saveData) media.classList.add("is-reduced");
 
-  /* Strip eager <source> children so browsers cannot prefetch ~2.7MB offscreen */
+  video.removeAttribute("controls");
+  video.controls = false;
+  video.setAttribute("playsinline", "");
+  video.setAttribute("muted", "");
+  video.setAttribute("loop", "");
+  video.setAttribute("disablepictureinpicture", "");
+  video.setAttribute("controlslist", "nodownload nofullscreen noremoteplayback");
+
+  /* Strip eager <source> children so browsers cannot prefetch offscreen */
   if (lazySrc) {
     while (video.firstChild) video.removeChild(video.firstChild);
     video.removeAttribute("src");
-  }
-
-  function syncToggle() {
-    if (!toggle) return;
-    const playing = !video.paused && !video.ended;
-    toggle.setAttribute("aria-pressed", String(playing));
-    toggle.setAttribute("aria-label", playing ? labelPause : labelPlay);
   }
 
   function revealLive() {
@@ -892,7 +929,6 @@
   }
 
   function concealLive() {
-    /* Keep last video frame visible when paused */
     media.classList.remove("is-live");
   }
 
@@ -905,11 +941,11 @@
       source.type = "video/mp4";
       video.appendChild(source);
     }
-    video.preload = "metadata";
+    video.preload = reduceMotion || saveData ? "metadata" : "auto";
     try {
       video.load();
     } catch (_) {
-      /* keep poster */
+      /* keep quiet */
     }
   }
 
@@ -918,16 +954,15 @@
     armSource();
     video.muted = true;
     video.playsInline = true;
+    video.controls = false;
     try {
       const playPromise = video.play();
       if (playPromise && typeof playPromise.then === "function") {
         await playPromise;
       }
       revealLive();
-      syncToggle();
     } catch (_) {
       concealLive();
-      syncToggle();
     }
   }
 
@@ -936,22 +971,15 @@
       video.pause();
     }
     concealLive();
-    syncToggle();
   }
 
-  video.addEventListener("playing", () => {
-    revealLive();
-    syncToggle();
-  });
-
+  video.addEventListener("playing", revealLive);
   video.addEventListener("pause", () => {
-    syncToggle();
+    /* retain last frame; no overlay */
   });
-
   video.addEventListener("error", () => {
     concealLive();
     userPaused = true;
-    syncToggle();
   });
 
   if ("IntersectionObserver" in window) {
@@ -960,7 +988,6 @@
         entries.forEach((entry) => {
           inView = entry.isIntersecting && entry.intersectionRatio >= 0.28;
           if (inView) {
-            /* Always arm media when visible so the first frame paints even if paused */
             armSource();
             tryPlay();
           } else {
@@ -984,21 +1011,6 @@
       tryPlay();
     }
   });
-
-  toggle?.addEventListener("click", (event) => {
-    event.preventDefault();
-    event.stopPropagation();
-    if (video.paused) {
-      userPaused = false;
-      tryPlay();
-    } else {
-      userPaused = true;
-      pauseSoftly();
-      concealLive();
-    }
-  });
-
-  syncToggle();
 })();
 
 (() => {
@@ -1032,8 +1044,15 @@
   }
 
   function paintPoster() {
-    if (!stage || !poster) return;
+    /* Mobile cinema only — never layer the mobile poster under the desktop still */
+    if (!stage || !poster || !mobileMq.matches) return;
     stage.style.backgroundImage = 'url("' + poster + '")';
+  }
+
+  function clearPoster() {
+    if (!stage) return;
+    stage.style.backgroundImage = "";
+    stage.style.removeProperty("background-image");
   }
 
   function armStill() {
@@ -1049,6 +1068,7 @@
       return;
     }
     stillArmed = true;
+    clearPoster();
     if (still.getAttribute("src") !== desktopSrc) {
       still.setAttribute("src", desktopSrc);
     }
@@ -1057,7 +1077,7 @@
 
   function disarm() {
     /* Only tear down when leaving the mobile cinema path — never on scroll */
-    hero.classList.remove("is-cinema-live");
+    hero.classList.remove("is-cinema-live", "is-cinema-ready");
     if (!video.paused) video.pause();
     video.removeAttribute("src");
     video.removeAttribute("poster");
@@ -1068,7 +1088,7 @@
       /* ignore */
     }
     armed = false;
-    /* Keep is-cinema-ready so poster/stage remains painted — no black flash */
+    clearPoster();
   }
 
   function arm() {
@@ -1117,14 +1137,22 @@
   }
 
   function syncViewport() {
-    armStill();
     if (!mobileMq.matches) {
-      if (wasMobile) disarm();
+      /* Desktop: official still only — no video, no mobile poster underlay */
+      if (wasMobile || armed) disarm();
       wasMobile = false;
+      stillArmed = false;
+      armStill();
       markEntered();
       return;
     }
     wasMobile = true;
+    /* Drop any desktop still that may have been armed before a resize into mobile */
+    if (still && still.hasAttribute("src") && !still.getAttribute("src").startsWith("data:")) {
+      still.removeAttribute("src");
+      still.removeAttribute("fetchpriority");
+      stillArmed = false;
+    }
     paintPoster();
     if (reduceMotion || saveData) {
       if (poster) video.setAttribute("poster", poster);
@@ -1187,8 +1215,8 @@
     mobileMq.addListener(onViewportChange);
   }
 
-  /* Paint poster before first film frame; enter copy quickly */
-  paintPoster();
+  /* Mobile: paint cinema poster first. Desktop: official still only. */
+  if (mobileMq.matches) paintPoster();
   requestAnimationFrame(() => {
     if (!mobileMq.matches || reduceMotion || saveData) {
       markEntered();

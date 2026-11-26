@@ -1,0 +1,702 @@
+/* Signature Silk — photographic fabric connecting Freedom → About → Closing.
+   Desktop art direction (≥1200). Mobile preserves existing layouts. */
+
+/* Kill horizontal page overflow from decorative bleed (portrait / silk) */
+html {
+  overflow-x: clip;
+}
+
+body {
+  overflow-x: clip;
+  max-width: 100%;
+}
+
+.editorial-silk {
+  display: none;
+  pointer-events: none;
+  user-select: none;
+}
+
+.ap-reference-outline {
+  display: none;
+}
+
+@media (min-width: 1200px) {
+  /* Clear gap under Academy cards — portrait stays below, no overlap */
+  .academy {
+    padding-bottom: clamp(5rem, 8vw, 7.5rem);
+  }
+
+  .academy-upcoming,
+  .academy-flagship {
+    position: relative;
+    z-index: 3;
+  }
+
+  .editorial-story {
+    position: relative;
+    isolation: isolate;
+    background: var(--ivory);
+    overflow: visible;
+  }
+
+  .editorial-story .freedom[data-freedom-portrait],
+  .editorial-story .about-portrait,
+  .editorial-story .closing-canvas {
+    background: transparent;
+  }
+
+  /* ——— Freedom / testimonials ——— */
+  .editorial-story .freedom[data-freedom-portrait] {
+    /* Soft continuity only — keep clear air under Academy cards */
+    --freedom-rise: clamp(28px, 2.5vw, 48px);
+    min-height: clamp(570px, 40vw, 800px);
+    align-items: center;
+    margin-top: calc(var(--freedom-rise) * -1);
+    padding-block: calc(clamp(88px, 7.5vw, 128px) + var(--freedom-rise))
+      clamp(78px, 6vw, 120px);
+    overflow: visible;
+    contain: none;
+  }
+
+  .editorial-story .freedom[data-freedom-portrait]::after {
+    display: none;
+  }
+
+  .editorial-story .freedom[data-freedom-portrait]::before {
+    display: none;
+  }
+
+  .editorial-story .freedom[data-freedom-portrait] .freedom-portrait {
+    width: 46%;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    height: 100%;
+    z-index: 2;
+    overflow: hidden;
+  }
+
+  .editorial-story .freedom[data-freedom-portrait] .freedom-portrait-img {
+    --freedom-portrait-opacity: 1;
+    width: 100%;
+    max-width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: left 8%;
+    filter: none;
+    /* Keep hair crown opaque — dissolve only right + bottom into ivory */
+    -webkit-mask-image:
+      linear-gradient(to right, #000 0%, #000 43%, rgba(0, 0, 0, 0.85) 62%, rgba(0, 0, 0, 0.45) 78%, transparent 100%),
+      linear-gradient(to bottom, #000 0%, #000 58%, rgba(0, 0, 0, 0.7) 76%, rgba(0, 0, 0, 0.2) 90%, transparent 100%);
+    mask-image:
+      linear-gradient(to right, #000 0%, #000 43%, rgba(0, 0, 0, 0.85) 62%, rgba(0, 0, 0, 0.45) 78%, transparent 100%),
+      linear-gradient(to bottom, #000 0%, #000 58%, rgba(0, 0, 0, 0.7) 76%, rgba(0, 0, 0, 0.2) 90%, transparent 100%);
+    -webkit-mask-composite: source-in;
+    mask-composite: intersect;
+  }
+
+  html[dir="ltr"] .editorial-story .freedom[data-freedom-portrait] .freedom-portrait {
+    left: auto;
+    right: 0;
+  }
+
+  html[dir="ltr"] .editorial-story .freedom[data-freedom-portrait] .freedom-portrait-img {
+    object-position: right 8%;
+    -webkit-mask-image:
+      linear-gradient(to left, #000 0%, #000 43%, rgba(0, 0, 0, 0.85) 62%, rgba(0, 0, 0, 0.45) 78%, transparent 100%),
+      linear-gradient(to bottom, #000 0%, #000 58%, rgba(0, 0, 0, 0.7) 76%, rgba(0, 0, 0, 0.2) 90%, transparent 100%);
+    mask-image:
+      linear-gradient(to left, #000 0%, #000 43%, rgba(0, 0, 0, 0.85) 62%, rgba(0, 0, 0, 0.45) 78%, transparent 100%),
+      linear-gradient(to bottom, #000 0%, #000 58%, rgba(0, 0, 0, 0.7) 76%, rgba(0, 0, 0, 0.2) 90%, transparent 100%);
+  }
+
+  .editorial-story .freedom[data-freedom-portrait] .freedom-inner {
+    padding-block-end: 0;
+    align-items: flex-start;
+    padding-inline: clamp(90px, 11vw, 210px);
+    max-width: 1700px;
+  }
+
+  .editorial-story .freedom[data-freedom-portrait] .freedom-manifesto,
+  .editorial-story .freedom[data-freedom-portrait] .freedom-voices {
+    width: min(100%, 570px);
+    max-width: 570px;
+  }
+
+  .editorial-story .freedom-title-lead {
+    max-width: none;
+    font-size: clamp(2.5rem, 4.2vw, 4.2rem);
+    line-height: 1.25;
+  }
+
+  .editorial-story .freedom[data-freedom-portrait] .freedom-voices {
+    margin-top: clamp(25px, 3vw, 55px);
+  }
+
+  .editorial-story .freedom[data-freedom-portrait] .freedom-quote p {
+    font-size: clamp(1.25rem, 1.95vw, 1.9rem);
+    max-width: none;
+  }
+
+  .editorial-story .freedom[data-freedom-portrait] .freedom-quote-frame {
+    min-height: var(--freedom-quote-h, 8rem);
+  }
+
+  /* ——— Photographic silk bridges ——— */
+  .editorial-silk {
+    display: block;
+    position: relative;
+    height: 0;
+    z-index: 4;
+  }
+
+  .editorial-silk::before {
+    content: "";
+    position: absolute;
+    pointer-events: none;
+    background-repeat: no-repeat;
+    background-size: 100% 100%;
+    max-width: 100%;
+  }
+
+  .editorial-silk--bridge::before {
+    width: min(86%, 100%);
+    height: 15vw;
+    max-height: 250px;
+    left: 0;
+    top: 0;
+    transform: translateY(-50%);
+    background-image: url("assets/silk/reference-bridge.webp");
+  }
+
+  .editorial-silk--hem::before {
+    width: min(75%, 100%);
+    height: 14vw;
+    max-height: 220px;
+    left: 0;
+    top: 0;
+    transform: translateY(-55%);
+    background-image: url("assets/silk/reference-hem.webp");
+  }
+
+  html[dir="ltr"] .editorial-silk--bridge::before,
+  html[dir="ltr"] .editorial-silk--hem::before {
+    left: auto;
+    right: 0;
+    transform: translateY(-50%) scaleX(-1);
+  }
+
+  html[dir="ltr"] .editorial-silk--hem::before {
+    transform: translateY(-55%) scaleX(-1);
+  }
+
+  /* ——— About Seham — quiet oval + gold contour ——— */
+  .editorial-story .about-portrait {
+    padding-block: clamp(55px, 5vw, 90px) clamp(45px, 4vw, 75px);
+    overflow: visible;
+    contain: none;
+    container-type: normal;
+  }
+
+  .editorial-story .about-portrait .ap-stage {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    width: min(100% - 16vw, 1500px);
+    min-height: 0;
+    column-gap: clamp(65px, 8vw, 140px);
+  }
+
+  .editorial-story .about-portrait .ap-visual {
+    position: relative;
+    width: 100%;
+    max-width: 580px;
+    aspect-ratio: 1 / 1.08;
+    justify-self: center;
+  }
+
+  .editorial-story .about-portrait .ap-copy {
+    background: transparent;
+    max-width: 32rem;
+    justify-self: start;
+    padding: 0;
+  }
+
+  .editorial-story .about-portrait .ap-foundation,
+  .editorial-story .about-portrait .ap-blob,
+  .editorial-story .about-portrait .ap-contour {
+    display: none !important;
+  }
+
+  /* Soft rose pedestal behind portrait */
+  .editorial-story .about-portrait .ap-visual::before {
+    content: "";
+    position: absolute;
+    inset: -8% -10% 8% 12%;
+    background: linear-gradient(145deg, #f7efea, #efe0da 65%, #fff0);
+    border-radius: 50%;
+    transform: rotate(35deg);
+    z-index: 0;
+    pointer-events: none;
+  }
+
+  html[dir="ltr"] .editorial-story .about-portrait .ap-visual::before {
+    inset: -8% 12% 8% -10%;
+    transform: rotate(-35deg);
+  }
+
+  .editorial-story .about-portrait .ap-photo {
+    position: relative;
+    z-index: 2;
+    clip-path: url(#ap-mask-reference);
+    -webkit-clip-path: url(#ap-mask-reference);
+  }
+
+  html[dir="ltr"] .editorial-story .about-portrait .ap-photo {
+    clip-path: url(#ap-mask-reference-ltr);
+    -webkit-clip-path: url(#ap-mask-reference-ltr);
+  }
+
+  .editorial-story .about-portrait .ap-photo img,
+  .editorial-story .about-portrait.ap-js.ap-in .ap-photo img,
+  .editorial-story .about-portrait.ap-js.ap-in.ap-done .ap-photo img {
+    transform: none !important;
+    object-position: 50% 8%;
+  }
+
+  .editorial-story .about-portrait .ap-reference-outline {
+    display: block;
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 3;
+    pointer-events: none;
+  }
+
+  .editorial-story .ap-reference-outline path {
+    fill: none;
+    stroke: #c19a59;
+    stroke-width: 1.25px;
+    vector-effect: non-scaling-stroke;
+  }
+
+  html[dir="ltr"] .editorial-story .ap-reference-outline {
+    transform: scaleX(-1);
+  }
+
+  /* ——— Closing CTA ——— */
+  .editorial-story .closing-canvas {
+    position: relative;
+    overflow: visible;
+    contain: none;
+    background: transparent;
+  }
+
+  .editorial-story .closing-silk {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    z-index: 1;
+  }
+
+  .editorial-story .closing-silk img {
+    display: none !important;
+  }
+
+  .editorial-story .closing-silk::after {
+    content: "";
+    position: absolute;
+    right: 0;
+    top: 12%;
+    width: min(42%, 100%);
+    max-width: 100%;
+    height: clamp(130px, 15vw, 240px);
+    background: url("assets/silk/reference-exit.webp") center / 100% 100% no-repeat;
+    pointer-events: none;
+  }
+
+  html[dir="ltr"] .editorial-story .closing-silk::after {
+    right: auto;
+    left: 0;
+    transform: scaleX(-1);
+  }
+
+  .editorial-story .final-cta {
+    position: relative;
+    z-index: 2;
+    padding-top: clamp(90px, 8vw, 150px);
+    background: transparent;
+  }
+
+  .editorial-story .final-cta h2 {
+    font-size: clamp(2.65rem, 5vw, 4.6rem);
+    max-width: 15ch;
+  }
+}
+
+/* ============================================================
+   Mobile Silk Edition — independent composition (<1200)
+   Desktop rules above remain untouched.
+   ============================================================ */
+@media (max-width: 1199px) {
+  .ap-reference-outline {
+    display: none !important;
+  }
+
+  /* Continuous ivory canvas: Academy → Freedom → About → CTA (same idea as desktop) */
+  .academy {
+    padding-bottom: clamp(1.75rem, 5vw, 3rem);
+  }
+
+  .editorial-story {
+    display: block;
+    position: relative;
+    isolation: isolate;
+    overflow-x: clip;
+    overflow-y: visible;
+    background: var(--ivory);
+  }
+
+  .editorial-story .freedom[data-freedom-portrait],
+  .editorial-story .about-portrait,
+  .editorial-story .closing-canvas {
+    --freedom-field: var(--ivory);
+    background: transparent;
+    contain: none;
+    overflow: visible;
+  }
+
+  /* ——— Freedom / testimonials ——— */
+  .editorial-story .freedom[data-freedom-portrait] {
+    /* Soft join into Academy — one surface, no floating crown gap */
+    --freedom-rise: clamp(12px, 3vw, 28px);
+    margin-top: calc(var(--freedom-rise) * -1);
+    padding-block: clamp(28px, 5vw, 48px) clamp(34px, 6vw, 64px);
+  }
+
+  .editorial-story .freedom[data-freedom-portrait]::before {
+    display: none;
+  }
+
+  .editorial-story .freedom[data-freedom-portrait] .freedom-portrait {
+    display: block;
+    position: relative;
+    left: auto;
+    right: auto;
+    top: auto;
+    bottom: auto;
+    width: min(76%, 420px);
+    height: clamp(195px, 57vw, 320px);
+    margin: 0 auto -10px;
+    pointer-events: none;
+    overflow: visible;
+    z-index: 2;
+  }
+
+  .editorial-story .freedom[data-freedom-portrait] .freedom-portrait-img {
+    position: relative;
+    inset: auto;
+    width: 100%;
+    max-width: 100%;
+    height: 100%;
+    object-fit: contain;
+    object-position: center top;
+    --freedom-portrait-opacity: 1;
+    opacity: 1 !important;
+    transform: none !important;
+    transition: none !important;
+    filter: none;
+    -webkit-mask-image:
+      linear-gradient(to bottom, #000 0%, #000 48%, rgba(0, 0, 0, 0.7) 67%, transparent 100%),
+      linear-gradient(to right, transparent, #000 18%, #000 77%, transparent);
+    mask-image:
+      linear-gradient(to bottom, #000 0%, #000 48%, rgba(0, 0, 0, 0.7) 67%, transparent 100%),
+      linear-gradient(to right, transparent, #000 18%, #000 77%, transparent);
+    -webkit-mask-composite: source-in;
+    mask-composite: intersect;
+  }
+
+  .editorial-story .freedom-inner {
+    position: relative;
+    padding-block: 0;
+    z-index: 2;
+  }
+
+  .editorial-story .freedom-nav {
+    min-width: 44px;
+    min-height: 44px;
+  }
+
+  /* ——— Photographic silk bridges ——— */
+  .editorial-story .editorial-silk {
+    display: block;
+    position: relative;
+    height: clamp(54px, 13vw, 115px);
+    z-index: 0;
+    pointer-events: none;
+    user-select: none;
+  }
+
+  .editorial-story .editorial-silk::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background-repeat: no-repeat;
+    background-size: contain;
+    max-width: 100%;
+  }
+
+  .editorial-story .editorial-silk--bridge::before {
+    background-image: url("assets/silk/mobile/reference-bridge.webp");
+    background-position: left center;
+  }
+
+  .editorial-story .editorial-silk--hem::before {
+    background-image: url("assets/silk/mobile/reference-hem.webp");
+    background-position: right center;
+  }
+
+  html[dir="ltr"] .editorial-story .editorial-silk--bridge::before {
+    background-position: right center;
+  }
+
+  html[dir="ltr"] .editorial-story .editorial-silk--hem::before {
+    background-position: left center;
+  }
+
+  /* ——— About Seham ——— */
+  .editorial-story .about-portrait {
+    padding: 0;
+    container-type: normal;
+  }
+
+  .editorial-story .about-portrait .ap-stage {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: clamp(18px, 4vw, 40px);
+    width: 100%;
+    min-height: 0;
+    padding: clamp(12px, 3vw, 30px) 0 clamp(25px, 5vw, 50px);
+  }
+
+  .editorial-story .about-portrait .ap-visual {
+    position: relative;
+    width: min(78vw, 460px);
+    aspect-ratio: 1 / 1.12;
+    max-width: none;
+    contain: none;
+    overflow: visible;
+    flex: none;
+  }
+
+  .editorial-story .about-portrait .ap-blob,
+  .editorial-story .about-portrait .ap-foundation,
+  .editorial-story .about-portrait .ap-contour {
+    display: none !important;
+  }
+
+  .editorial-story .about-portrait .ap-visual::before {
+    content: "";
+    position: absolute;
+    inset: 1% -2% 3% 3%;
+    border: 1px solid #bb9784;
+    border-radius: 49% 49% 46% 46% / 39% 43% 56% 58%;
+    transform: rotate(5deg);
+    background: none;
+    pointer-events: none;
+    z-index: 3;
+  }
+
+  html[dir="ltr"] .editorial-story .about-portrait .ap-visual::before {
+    inset: 1% 3% 3% -2%;
+    transform: rotate(-5deg);
+  }
+
+  .editorial-story .about-portrait .ap-photo,
+  html[dir="ltr"] .editorial-story .about-portrait .ap-photo {
+    clip-path: none;
+    -webkit-clip-path: none;
+    border-radius: 49% 49% 46% 46% / 39% 43% 56% 58%;
+    inset: 3%;
+    overflow: hidden;
+  }
+
+  .editorial-story .about-portrait .ap-photo img,
+  .editorial-story .about-portrait.ap-js.ap-in .ap-photo img,
+  .editorial-story .about-portrait.ap-js.ap-in.ap-done .ap-photo img {
+    object-position: 50% 20%;
+    transform: none !important;
+  }
+
+  .editorial-story .about-portrait .ap-copy {
+    align-items: center;
+    text-align: center;
+    background: transparent;
+    width: min(86vw, 560px);
+    margin: 0;
+    padding: 0;
+  }
+
+  .editorial-story .about-portrait .ap-title {
+    font-size: clamp(44px, 12vw, 82px);
+  }
+
+  html[lang="en"] .editorial-story .about-portrait .ap-title {
+    font-size: clamp(34px, 8vw, 64px);
+  }
+
+  /* ——— Closing CTA ——— */
+  .editorial-story .closing-canvas {
+    overflow: visible;
+    contain: none;
+  }
+
+  .editorial-story .closing-silk img {
+    display: none !important;
+  }
+
+  .editorial-story .closing-silk::after {
+    content: "";
+    position: absolute;
+    right: 0;
+    top: 0;
+    width: clamp(90px, 32vw, 250px);
+    height: clamp(42px, 15vw, 115px);
+    background: url("assets/silk/mobile/reference-exit.webp") right top / contain no-repeat;
+    pointer-events: none;
+    user-select: none;
+  }
+
+  html[dir="ltr"] .editorial-story .closing-silk::after {
+    right: auto;
+    left: 0;
+    background-position: left top;
+  }
+
+  .editorial-story .final-cta {
+    padding-top: clamp(70px, 18vw, 140px);
+    background: transparent;
+  }
+
+  .editorial-story .final-cta h2 {
+    max-width: 18ch;
+    font-size: clamp(2.35rem, 7vw, 4rem);
+  }
+
+  html[dir="ltr"] .editorial-story .final-cta h2 {
+    max-width: 15ch;
+    font-size: clamp(2rem, 6vw, 3.5rem);
+  }
+}
+
+/* Small phones */
+@media (max-width: 374px) {
+  .editorial-story .freedom[data-freedom-portrait] .freedom-portrait {
+    width: min(82%, 340px);
+    height: clamp(170px, 54vw, 240px);
+  }
+
+  .editorial-story .editorial-silk {
+    height: clamp(44px, 12vw, 72px);
+  }
+
+  .editorial-story .about-portrait .ap-visual {
+    width: min(84vw, 320px);
+  }
+}
+
+/* Large phones */
+@media (min-width: 431px) and (max-width: 599px) {
+  .editorial-story .freedom[data-freedom-portrait] .freedom-portrait {
+    width: min(70%, 400px);
+  }
+
+  .editorial-story .about-portrait .ap-visual {
+    width: min(70vw, 420px);
+  }
+}
+
+/* Small tablets — restrained horizontal breathing room */
+@media (min-width: 600px) and (max-width: 767px) {
+  .editorial-story .freedom[data-freedom-portrait] .freedom-portrait {
+    width: min(58%, 380px);
+    height: clamp(220px, 42vw, 300px);
+  }
+
+  .editorial-story .editorial-silk {
+    height: clamp(70px, 11vw, 100px);
+  }
+
+  .editorial-story .about-portrait .ap-visual {
+    width: min(58vw, 420px);
+  }
+
+  .editorial-story .about-portrait .ap-copy {
+    width: min(70vw, 520px);
+  }
+}
+
+/* Portrait tablets — balanced intermediate composition */
+@media (min-width: 768px) and (max-width: 1023px) {
+  .editorial-story .freedom[data-freedom-portrait] {
+    padding-block: clamp(56px, 6vw, 84px) clamp(40px, 5vw, 68px);
+  }
+
+  .editorial-story .freedom[data-freedom-portrait] .freedom-portrait {
+    width: min(48%, 420px);
+    height: clamp(240px, 34vw, 320px);
+  }
+
+  .editorial-story .freedom-inner {
+    max-width: 640px;
+    margin-inline: auto;
+  }
+
+  .editorial-story .editorial-silk {
+    height: clamp(80px, 10vw, 120px);
+  }
+
+  .editorial-story .about-portrait .ap-stage {
+    gap: clamp(24px, 3.5vw, 48px);
+  }
+
+  .editorial-story .about-portrait .ap-visual {
+    width: min(48vw, 460px);
+  }
+
+  .editorial-story .about-portrait .ap-copy {
+    width: min(62vw, 560px);
+  }
+
+  .editorial-story .closing-silk::after {
+    width: clamp(140px, 24vw, 220px);
+    height: clamp(60px, 10vw, 110px);
+  }
+}
+
+/* Compact landscape tablets — approach desktop without crossing 1200 */
+@media (min-width: 1024px) and (max-width: 1199px) {
+  .editorial-story .freedom[data-freedom-portrait] .freedom-portrait {
+    width: min(42%, 440px);
+    height: clamp(260px, 30vw, 340px);
+  }
+
+  .editorial-story .freedom-inner {
+    max-width: 720px;
+    margin-inline: auto;
+  }
+
+  .editorial-story .editorial-silk {
+    height: clamp(90px, 9vw, 130px);
+  }
+
+  .editorial-story .about-portrait .ap-visual {
+    width: min(42vw, 480px);
+  }
+
+  .editorial-story .about-portrait .ap-copy {
+    width: min(52vw, 580px);
+  }
+}
