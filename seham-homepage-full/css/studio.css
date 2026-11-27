@@ -40,7 +40,7 @@
   --ease-soft: cubic-bezier(0.33, 0.1, 0.2, 1);
   --ease-silk: cubic-bezier(0.25, 0.8, 0.25, 1);
   --english-display: "Jost", "Helvetica Neue", Arial, sans-serif;
-  --arabic-display: "Aref Ruqaa", "Traditional Arabic", serif;
+  --arabic-display: "Fustat", "Noto Naskh Arabic", serif;
   --body-ar: "Tajawal", "Segoe UI", Tahoma, sans-serif;
   --body-en: "Cormorant Garamond", Georgia, "Times New Roman", serif;
   --logotype: "Alegre Script Pro", "Snell Roundhand", cursive;
@@ -3882,7 +3882,7 @@ html[dir="ltr"] .xp--coach h3 {
 
 /* —— Gift: intimate burgundy campaign —— */
 
-.xp--gift {
+.xp--live {
   background: var(--garnet);
   color: #fff;
   display: grid;
@@ -3892,27 +3892,27 @@ html[dir="ltr"] .xp--coach h3 {
   overflow: hidden;
 }
 
-.xp--gift .xp-photo {
+.xp--live .xp-photo {
   -webkit-mask-image: linear-gradient(to right, #000 0%, #000 68%, transparent 100%);
   mask-image: linear-gradient(to right, #000 0%, #000 68%, transparent 100%);
 }
 
-html[dir="rtl"] .xp--gift .xp-photo {
+html[dir="rtl"] .xp--live .xp-photo {
   -webkit-mask-image: linear-gradient(to left, #000 0%, #000 68%, transparent 100%);
   mask-image: linear-gradient(to left, #000 0%, #000 68%, transparent 100%);
 }
 
-.xp--gift .xp-photo img {
+.xp--live .xp-photo img {
   /* Warm smile, hand-in-hair — upright portrait */
   object-position: 48% 18%;
   filter: saturate(1.04) contrast(1.02);
 }
 
-html[dir="ltr"] .xp--gift .xp-photo img {
+html[dir="ltr"] .xp--live .xp-photo img {
   object-position: 50% 16%;
 }
 
-.xp--gift .xp-copy {
+.xp--live .xp-copy {
   position: relative;
   z-index: 1;
   display: flex;
@@ -3925,17 +3925,17 @@ html[dir="ltr"] .xp--gift .xp-photo img {
   padding-inline-start: clamp(0.5rem, 1vw, 0.85rem);
 }
 
-.xp--gift h3 {
+.xp--live h3 {
   color: #fff;
   font-size: clamp(1.45rem, 2.35vw, 2.05rem);
   max-width: 11ch;
 }
 
-html[dir="ltr"] .xp--gift h3 {
+html[dir="ltr"] .xp--live h3 {
   max-width: 13ch;
 }
 
-.xp--gift p {
+.xp--live p {
   color: color-mix(in srgb, #fff 78%, transparent);
   font-size: clamp(0.88rem, 1.05vw, 0.98rem);
   max-width: 26ch;
@@ -4075,7 +4075,7 @@ html[dir="ltr"] .xp.xp--studio h3 {
 
 @media (hover: hover) and (pointer: fine) {
   .xp--coach:hover,
-  .xp--gift:hover {
+  .xp--live:hover {
     transform: translateY(-2px);
   }
 }
@@ -4094,8 +4094,8 @@ html[dir="ltr"] .xp.xp--studio h3 {
   box-shadow: 0 8px 20px color-mix(in srgb, var(--garnet) 22%, transparent);
 }
 
-.xp--gift:hover .xp-cta--ivory,
-.xp--gift:focus-visible .xp-cta--ivory {
+.xp--live:hover .xp-cta--ivory,
+.xp--live:focus-visible .xp-cta--ivory {
   background: #fff;
   box-shadow: 0 8px 20px color-mix(in srgb, var(--deep) 16%, transparent);
 }
@@ -4198,7 +4198,7 @@ html[dir="ltr"] .xp:focus-visible .cta-arrow {
   transition-delay: 70ms;
 }
 
-.js-motion .curated.is-in .xp--gift {
+.js-motion .curated.is-in .xp--live {
   transition-delay: 110ms;
 }
 
@@ -4287,7 +4287,7 @@ html[dir="ltr"] .xp:focus-visible .cta-arrow {
   }
 
   .xp--coach,
-  .xp--gift {
+  .xp--live {
     grid-template-columns: minmax(0, 0.88fr) minmax(0, 1.12fr);
   }
 }
@@ -4401,7 +4401,7 @@ html[dir="ltr"] .xp:focus-visible .cta-arrow {
 
   /* Portrait photo on top — full-bleed, not a side strip */
   .xp--coach,
-  .xp--gift {
+  .xp--live {
     grid-template-columns: 1fr;
     grid-template-rows: auto auto;
     min-height: 0;
@@ -4409,11 +4409,11 @@ html[dir="ltr"] .xp:focus-visible .cta-arrow {
   }
 
   .xp--coach .xp-photo,
-  .xp--gift .xp-photo,
+  .xp--live .xp-photo,
   html[dir="rtl"] .xp--coach .xp-photo,
-  html[dir="rtl"] .xp--gift .xp-photo,
+  html[dir="rtl"] .xp--live .xp-photo,
   html[dir="ltr"] .xp--coach .xp-photo,
-  html[dir="ltr"] .xp--gift .xp-photo {
+  html[dir="ltr"] .xp--live .xp-photo {
     order: -1;
     width: 100%;
     justify-self: stretch;
@@ -4427,7 +4427,7 @@ html[dir="ltr"] .xp:focus-visible .cta-arrow {
   }
 
   .xp--coach .xp-photo img,
-  .xp--gift .xp-photo img {
+  .xp--live .xp-photo img {
     width: 100%;
     height: 100%;
     object-fit: cover;
@@ -4436,7 +4436,7 @@ html[dir="ltr"] .xp:focus-visible .cta-arrow {
   }
 
   .xp--coach .xp-copy,
-  .xp--gift .xp-copy {
+  .xp--live .xp-copy {
     justify-content: flex-start;
     padding: 1.05rem 1.2rem 1.25rem;
     padding-inline-start: 1.2rem;
@@ -4444,23 +4444,23 @@ html[dir="ltr"] .xp:focus-visible .cta-arrow {
   }
 
   .xp--coach h3,
-  .xp--gift h3 {
+  .xp--live h3 {
     max-width: none;
     font-size: clamp(1.45rem, 5.2vw, 1.75rem);
   }
 
   .xp--coach p,
-  .xp--gift p {
+  .xp--live p {
     max-width: 34ch;
   }
 
   .xp--coach .xp-cta,
-  .xp--gift .xp-cta {
+  .xp--live .xp-cta {
     margin-top: 0.55rem;
   }
 
   /* Soft seam: photo dissolves into burgundy copy */
-  .xp--gift .xp-photo::after {
+  .xp--live .xp-photo::after {
     content: "";
     position: absolute;
     inset-inline: 0;
@@ -4475,7 +4475,7 @@ html[dir="ltr"] .xp:focus-visible .cta-arrow {
     );
   }
 
-  .xp--gift .xp-copy {
+  .xp--live .xp-copy {
     background: var(--garnet);
     margin-top: -1px;
   }
@@ -4513,7 +4513,7 @@ html[dir="ltr"] .xp:focus-visible .cta-arrow {
   }
 
   .xp--coach .xp-photo,
-  .xp--gift .xp-photo {
+  .xp--live .xp-photo {
     width: 100%;
     aspect-ratio: 4 / 5;
     min-height: 260px;
@@ -4524,12 +4524,12 @@ html[dir="ltr"] .xp:focus-visible .cta-arrow {
     object-position: 55% 16%;
   }
 
-  .xp--gift .xp-photo img {
+  .xp--live .xp-photo img {
     object-position: 48% 14%;
   }
 
   .xp--coach .xp-copy,
-  .xp--gift .xp-copy {
+  .xp--live .xp-copy {
     padding: 0.95rem 1.15rem 1.2rem;
   }
 
@@ -4557,7 +4557,7 @@ html[dir="ltr"] .xp:focus-visible .cta-arrow {
   }
 
   .xp--coach .xp-photo,
-  .xp--gift .xp-photo {
+  .xp--live .xp-photo {
     min-height: 220px;
     max-height: 300px;
   }

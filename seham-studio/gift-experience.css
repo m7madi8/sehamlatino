@@ -1,0 +1,662 @@
+/* Gift experience modal — scoped to .seham-gift-modal.
+   Visual source: the supplied gift preview. Checkout is not part of this layer. */
+
+.seham-gift-modal {
+  --slg-wine: #3b0c18;
+  --slg-paper: #faf5ef;
+  --slg-ink: #3b0c18;
+  --slg-muted: #73585b;
+  --slg-display: var(--arabic-display, "Fustat", "Noto Naskh Arabic", serif);
+  --slg-body: var(--body-ar, Tajawal, Tahoma, Arial, sans-serif);
+  --slg-latin: var(--english-display, "Jost", "Helvetica Neue", Arial, sans-serif);
+  box-sizing: border-box;
+  border: 0;
+  padding: 0;
+  width: min(1100px, calc(100% - 48px));
+  max-width: none;
+  max-height: calc(100dvh - 48px - env(safe-area-inset-top, 0px) - env(safe-area-inset-bottom, 0px));
+  margin: auto;
+  border-radius: 34px;
+  background: var(--slg-paper);
+  color: var(--slg-ink);
+  font: 400 15px/1.65 var(--slg-body);
+  overflow-x: hidden;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  box-shadow: 0 24px 100px #1c040a35;
+  isolation: isolate;
+  z-index: 2000;
+}
+
+.seham-gift-modal *,
+.seham-gift-modal *::before,
+.seham-gift-modal *::after {
+  box-sizing: border-box;
+}
+
+.seham-gift-modal::backdrop {
+  background: #210710a8;
+}
+
+.seham-gift-modal[open] {
+  animation: seham-gift-in 0.36s cubic-bezier(0.2, 0.8, 0.2, 1) both;
+}
+
+@keyframes seham-gift-in {
+  from {
+    opacity: 0;
+    transform: translateY(14px) scale(0.985);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+.seham-gift-modal p {
+  max-width: none;
+}
+
+.seham-gift-modal img {
+  max-width: none;
+  object-fit: fill;
+}
+
+.seham-gift-modal .slg-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 0.78fr) minmax(0, 1.35fr);
+  position: relative;
+  min-height: 590px;
+}
+
+.seham-gift-modal .slg-close {
+  position: absolute;
+  inset-inline-end: 18px;
+  top: 18px;
+  z-index: 4;
+  border: 1px solid #3b0c1830;
+  background: var(--slg-paper);
+  color: var(--slg-wine);
+  border-radius: 50%;
+  width: 44px;
+  height: 44px;
+  display: grid;
+  place-items: center;
+  padding: 0;
+  cursor: pointer;
+}
+
+.seham-gift-modal .slg-close svg {
+  width: 19px;
+  height: 19px;
+}
+
+.seham-gift-modal .slg-close:hover {
+  background: #efe3de;
+}
+
+.seham-gift-modal .slg-story {
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  min-width: 0;
+  padding: 42px 34px 32px;
+  background: var(--slg-wine);
+  color: #f8eee3;
+  border-radius: 0;
+  border-end-end-radius: 80px;
+}
+
+.seham-gift-modal .slg-edition,
+.seham-gift-modal .slg-motto,
+.seham-gift-modal .slg-tag {
+  font: 400 10px/1.5 var(--slg-latin);
+  letter-spacing: 0.19em;
+  text-transform: uppercase;
+}
+
+.seham-gift-modal .slg-edition,
+.seham-gift-modal .slg-motto {
+  position: relative;
+  z-index: 1;
+  color: #e3cda9;
+}
+
+.seham-gift-modal .slg-story-copy {
+  position: relative;
+  z-index: 1;
+  padding-block: 48px 94px;
+}
+
+.seham-gift-modal .slg-story-copy > p {
+  font-size: 13px;
+  color: #e3cda9;
+  margin: 0 0 16px;
+}
+
+.seham-gift-modal .slg-story h2 {
+  font: 400 clamp(35px, 3.5vw, 55px) / 1.4 var(--slg-display);
+  margin: 0;
+  letter-spacing: 0;
+  text-transform: none;
+  color: inherit;
+}
+
+.seham-gift-modal .slg-story h2 em {
+  font-style: normal;
+  font-weight: 400;
+  color: #e6cda8;
+}
+
+.seham-gift-modal .slg-silk {
+  position: absolute;
+  width: 170%;
+  max-width: none;
+  height: auto;
+  bottom: 3%;
+  inset-inline-end: -38%;
+  opacity: 0.78;
+  pointer-events: none;
+  transform: rotate(-13deg);
+  z-index: 0;
+}
+
+.seham-gift-modal[dir="ltr"] .slg-silk {
+  transform: scaleX(-1) rotate(-13deg);
+}
+
+.seham-gift-modal .slg-form {
+  padding: 32px 42px 30px;
+  min-width: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.seham-gift-modal .slg-heading {
+  padding-inline-end: 52px;
+  margin-bottom: 16px;
+}
+
+.seham-gift-modal .slg-heading p {
+  margin: 0;
+  color: #8a4658;
+  font-size: 12px;
+}
+
+.seham-gift-modal .slg-heading h3 {
+  font: 400 clamp(31px, 3.2vw, 44px) / 1.3 var(--slg-display);
+  margin: 4px 0;
+  letter-spacing: 0;
+  text-transform: none;
+  color: var(--slg-ink);
+}
+
+.seham-gift-modal .slg-heading > span {
+  color: var(--slg-muted);
+  font-size: 13px;
+}
+
+.seham-gift-modal .slg-options {
+  min-width: 0;
+  border: 0;
+  padding: 0;
+  margin: 0;
+  display: grid;
+  gap: 5px;
+}
+
+.seham-gift-modal .slg-sr {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+.seham-gift-modal .slg-option {
+  position: relative;
+  display: grid;
+  grid-template-columns: 40px minmax(0, 1fr) 24px;
+  align-items: start;
+  gap: 14px;
+  min-width: 0;
+  padding: 14px 12px;
+  border-radius: 20px;
+  border: 1px solid transparent;
+  cursor: pointer;
+  transition: background 0.18s, border-color 0.18s;
+}
+
+.seham-gift-modal .slg-option + .slg-option {
+  border-top-color: #3b0c181a;
+}
+
+.seham-gift-modal .slg-option:hover {
+  background: #f1e8e3;
+}
+
+.seham-gift-modal .slg-option:has(input:checked) {
+  background: #efe1e2;
+  border-color: #a66a79;
+}
+
+.seham-gift-modal .slg-option:focus-within {
+  outline: 2px solid #8c4960;
+  outline-offset: 2px;
+}
+
+.seham-gift-modal .slg-option input {
+  position: absolute;
+  opacity: 0;
+  width: 1px;
+  height: 1px;
+  margin: 0;
+}
+
+.seham-gift-modal .slg-number {
+  font: 400 32px/1 var(--body-en, "Cormorant Garamond", Georgia, serif);
+  color: #ae7b87;
+  padding-top: 6px;
+  letter-spacing: 0;
+  text-transform: none;
+}
+
+.seham-gift-modal .slg-content {
+  display: grid;
+  gap: 2px;
+  min-width: 0;
+}
+
+.seham-gift-modal .slg-tag {
+  font-size: 9px;
+  letter-spacing: 0.15em;
+  color: #8b5260;
+  justify-self: start;
+}
+
+.seham-gift-modal .slg-content strong {
+  font-family: var(--slg-body);
+  font-size: 19px;
+  line-height: 1.45;
+  font-weight: 700;
+  letter-spacing: 0;
+  text-transform: none;
+}
+
+.seham-gift-modal .slg-quote {
+  font-size: 14px;
+  color: #78354b;
+}
+
+.seham-gift-modal .slg-desc {
+  font-size: 13px;
+  line-height: 1.65;
+  color: var(--slg-muted);
+}
+
+.seham-gift-modal .slg-radio {
+  width: 22px;
+  height: 22px;
+  border: 1px solid #b69ba0;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  margin-top: 9px;
+}
+
+.seham-gift-modal .slg-radio::after {
+  content: "";
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--slg-wine);
+  transform: scale(0);
+  transition: transform 0.18s;
+}
+
+.seham-gift-modal .slg-option:has(input:checked) .slg-radio::after {
+  transform: scale(1);
+}
+
+.seham-gift-modal .slg-bottom {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  margin-top: 20px;
+}
+
+.seham-gift-modal .slg-status {
+  font-size: 12px;
+  color: var(--slg-muted);
+  margin: 0;
+  max-width: 55%;
+}
+
+.seham-gift-modal .slg-next {
+  font: 600 14px/1.4 var(--slg-body);
+  background: var(--slg-wine);
+  color: #fff8ef;
+  border: 0;
+  border-radius: 999px;
+  min-height: 48px;
+  padding: 12px 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 22px;
+  cursor: pointer;
+  white-space: nowrap;
+  letter-spacing: 0;
+  text-transform: none;
+}
+
+.seham-gift-modal .slg-next:disabled {
+  opacity: 0.48;
+  cursor: not-allowed;
+}
+
+.seham-gift-modal .slg-next:not(:disabled):hover {
+  background: #64243b;
+}
+
+.seham-gift-modal .slg-next:focus-visible,
+.seham-gift-modal .slg-close:focus-visible {
+  outline: 2px solid #a66a79;
+  outline-offset: 3px;
+}
+
+.seham-gift-modal[dir="ltr"] {
+  --slg-display: var(--english-display, "Jost", "Helvetica Neue", Arial, sans-serif);
+  --slg-body: var(--body-en, "Cormorant Garamond", Georgia, serif);
+  font-size: 17px;
+}
+
+.seham-gift-modal[dir="ltr"] .slg-story h2,
+.seham-gift-modal[dir="ltr"] .slg-heading h3 {
+  font-family: var(--english-display, "Jost", "Helvetica Neue", Arial, sans-serif);
+  font-weight: 400;
+  letter-spacing: 0;
+  text-transform: none;
+  line-height: 1.2;
+}
+
+.seham-gift-modal[dir="ltr"] .slg-story h2 {
+  font-size: clamp(32px, 3.2vw, 48px);
+}
+
+.seham-gift-modal[dir="ltr"] .slg-content strong {
+  font-family: var(--body-en, "Cormorant Garamond", Georgia, serif);
+  font-weight: 500;
+  font-size: 22px;
+}
+
+.seham-gift-modal[dir="ltr"] .slg-next {
+  font-family: var(--english-display, "Jost", "Helvetica Neue", Arial, sans-serif);
+  font-weight: 400;
+  letter-spacing: 0.04em;
+}
+
+@media (max-width: 1024px) {
+  .seham-gift-modal {
+    width: min(1100px, calc(100% - 40px));
+  }
+
+  .seham-gift-modal .slg-form {
+    padding: 28px 28px 26px;
+  }
+
+  .seham-gift-modal .slg-story {
+    padding: 36px 28px 28px;
+  }
+}
+
+@media (max-width: 900px) {
+  .seham-gift-modal {
+    width: calc(100% - 32px);
+    max-height: calc(100dvh - 32px - env(safe-area-inset-top, 0px) - env(safe-area-inset-bottom, 0px));
+    border-radius: 28px;
+  }
+
+  .seham-gift-modal .slg-layout {
+    grid-template-columns: 1fr;
+    min-height: 0;
+  }
+
+  .seham-gift-modal .slg-story {
+    border-radius: 0 0 42px 42px;
+    border-end-end-radius: 42px;
+    min-height: 220px;
+    padding: 22px 25px 20px;
+  }
+
+  .seham-gift-modal .slg-story-copy {
+    padding: 22px 0 12px;
+  }
+
+  .seham-gift-modal .slg-story-copy > p {
+    display: none;
+  }
+
+  .seham-gift-modal .slg-story h2,
+  .seham-gift-modal[dir="ltr"] .slg-story h2 {
+    font-size: 36px;
+    line-height: 1.3;
+  }
+
+  .seham-gift-modal .slg-story h2 em br {
+    display: none;
+  }
+
+  .seham-gift-modal .slg-silk {
+    width: 75%;
+    inset-inline-end: -16%;
+    bottom: -22%;
+    opacity: 0.55;
+  }
+
+  .seham-gift-modal .slg-motto {
+    display: none;
+  }
+
+  .seham-gift-modal .slg-close {
+    background: #faf5ef;
+    color: #3b0c18;
+    top: 12px;
+    inset-inline-end: 12px;
+  }
+
+  .seham-gift-modal .slg-form {
+    padding: 22px 24px max(25px, env(safe-area-inset-bottom, 0px));
+  }
+
+  .seham-gift-modal .slg-heading {
+    padding: 0;
+    padding-inline-end: 52px;
+  }
+
+  .seham-gift-modal .slg-heading h3,
+  .seham-gift-modal[dir="ltr"] .slg-heading h3 {
+    font-size: 36px;
+  }
+
+  .seham-gift-modal .slg-option {
+    padding: 12px 8px;
+    gap: 10px;
+    grid-template-columns: 32px minmax(0, 1fr) 22px;
+  }
+
+  .seham-gift-modal .slg-number {
+    font-size: 27px;
+  }
+}
+
+@media (max-width: 480px) {
+  .seham-gift-modal {
+    width: calc(100% - 16px - env(safe-area-inset-left, 0px) - env(safe-area-inset-right, 0px));
+    max-height: calc(100dvh - 16px - env(safe-area-inset-top, 0px) - env(safe-area-inset-bottom, 0px));
+    border-radius: 24px;
+  }
+
+  .seham-gift-modal .slg-story {
+    min-height: 180px;
+    padding: 20px 20px 16px;
+  }
+
+  .seham-gift-modal .slg-story h2,
+  .seham-gift-modal[dir="ltr"] .slg-story h2 {
+    font-size: 30px;
+  }
+
+  .seham-gift-modal .slg-edition {
+    font-size: 9px;
+    max-width: 75%;
+  }
+
+  .seham-gift-modal .slg-story-copy {
+    padding: 18px 0 8px;
+  }
+
+  .seham-gift-modal .slg-form {
+    padding: 18px 14px max(20px, env(safe-area-inset-bottom, 0px));
+  }
+
+  .seham-gift-modal .slg-heading {
+    margin-bottom: 8px;
+  }
+
+  .seham-gift-modal .slg-heading h3,
+  .seham-gift-modal[dir="ltr"] .slg-heading h3 {
+    font-size: 31px;
+  }
+
+  .seham-gift-modal .slg-option {
+    grid-template-columns: 25px minmax(0, 1fr) 20px;
+    gap: 8px;
+    padding: 12px 5px;
+    border-radius: 16px;
+  }
+
+  .seham-gift-modal .slg-number {
+    font-size: 23px;
+  }
+
+  .seham-gift-modal .slg-content strong {
+    font-size: 17px;
+  }
+
+  .seham-gift-modal[dir="ltr"] .slg-content strong {
+    font-size: 20px;
+  }
+
+  .seham-gift-modal .slg-quote {
+    font-size: 13px;
+  }
+
+  .seham-gift-modal .slg-desc {
+    font-size: 12px;
+  }
+
+  .seham-gift-modal .slg-radio {
+    width: 20px;
+    height: 20px;
+  }
+
+  .seham-gift-modal .slg-bottom {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 8px;
+    margin-top: 14px;
+  }
+
+  .seham-gift-modal .slg-status {
+    max-width: none;
+    text-align: center;
+  }
+
+  .seham-gift-modal .slg-next {
+    width: 100%;
+  }
+}
+
+@media (max-width: 360px) {
+  .seham-gift-modal .slg-story h2,
+  .seham-gift-modal[dir="ltr"] .slg-story h2 {
+    font-size: 26px;
+  }
+
+  .seham-gift-modal .slg-heading h3,
+  .seham-gift-modal[dir="ltr"] .slg-heading h3 {
+    font-size: 28px;
+  }
+
+  .seham-gift-modal .slg-option {
+    grid-template-columns: 22px minmax(0, 1fr) 20px;
+    gap: 6px;
+  }
+}
+
+@media (max-height: 520px) {
+  .seham-gift-modal .slg-layout {
+    min-height: 0;
+  }
+
+  .seham-gift-modal .slg-story {
+    min-height: 0;
+    padding-block: 16px;
+  }
+
+  .seham-gift-modal .slg-story-copy {
+    padding-block: 8px 10px;
+  }
+
+  .seham-gift-modal .slg-story-copy > p,
+  .seham-gift-modal .slg-motto {
+    display: none;
+  }
+
+  .seham-gift-modal .slg-story h2,
+  .seham-gift-modal[dir="ltr"] .slg-story h2 {
+    font-size: 26px;
+  }
+
+  .seham-gift-modal .slg-form {
+    padding-block: 14px;
+  }
+
+  .seham-gift-modal .slg-heading {
+    margin-bottom: 8px;
+  }
+
+  .seham-gift-modal .slg-heading h3,
+  .seham-gift-modal[dir="ltr"] .slg-heading h3 {
+    font-size: 28px;
+  }
+
+  .seham-gift-modal .slg-option {
+    padding-block: 8px;
+  }
+}
+
+@media (min-width: 1440px) {
+  .seham-gift-modal {
+    width: min(1100px, calc(100% - 64px));
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .seham-gift-modal[open] {
+    animation: none;
+  }
+
+  .seham-gift-modal .slg-option,
+  .seham-gift-modal .slg-radio::after {
+    transition: none;
+  }
+}

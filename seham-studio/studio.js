@@ -12,7 +12,7 @@
     fonts.id = "seham-fonts";
     fonts.rel = "stylesheet";
     fonts.href =
-      "https://fonts.googleapis.com/css2?family=Aref+Ruqaa:wght@400;700&family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=Jost:wght@300;400&family=Tajawal:wght@400;500;700&display=swap";
+      "https://fonts.googleapis.com/css2?family=Fustat:wght@400;500;600;700&family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=Jost:wght@300;400&family=Tajawal:wght@400;500;700&display=swap";
     document.head.append(pre1, pre2, fonts);
   }
 
@@ -22,11 +22,31 @@
   const trigger = document.querySelector(".menu-trigger");
   const closeBtn = document.querySelector(".menu-close");
   const reduceMotion = matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const perfDiag = window.__sehamPerfDiag || null;
+  const motionQuery = new URLSearchParams(location.search).get("motion");
+  const MOTION_PROFILE = (() => {
+    if (motionQuery === "legacy" || motionQuery === "full") return "legacy";
+    if (motionQuery === "gsap" || motionQuery === "lenis") return motionQuery;
+    return "native";
+  })();
+  const legacyMotion = MOTION_PROFILE === "legacy";
+  const DESKTOP_CHOREO_Q =
+    "(min-width: 761px) and (prefers-reduced-motion: no-preference) and (hover: hover) and (pointer: fine)";
 
   /* ---------- Single scroll rAF bus (header + progress) ---------- */
   let scrollTicking = false;
   let lastScrolled = null;
   let lastProgress = -1;
+  let lenisChromeBus = false;
+
+  const heroPicture = document.querySelector(".page-index .hero-picture");
+  const heroMotion =
+    legacyMotion &&
+    !!heroPicture &&
+    !reduceMotion &&
+    !(perfDiag && perfDiag.decor === false) &&
+    matchMedia("(hover: hover) and (pointer: fine)").matches;
+  let lastHeroShift = -1;
 
   function updateChrome() {
     const y = window.scrollY || 0;
@@ -46,10 +66,21 @@
         lastProgress = rounded;
       }
     }
+    if (heroMotion && innerWidth >= 761) {
+      const shift = y > innerHeight * 1.25 ? 16 : Math.round(Math.min(16, y * 0.028) * 10) / 10;
+      if (shift !== lastHeroShift) {
+        lastHeroShift = shift;
+        heroPicture.style.transform = shift ? "translate3d(0," + shift + "px,0)" : "";
+      }
+    } else if (lastHeroShift) {
+      lastHeroShift = 0;
+      heroPicture.style.transform = "";
+    }
     scrollTicking = false;
   }
 
   function onScroll() {
+    if (lenisChromeBus) return;
     if (scrollTicking) return;
     scrollTicking = true;
     requestAnimationFrame(updateChrome);
@@ -57,6 +88,94 @@
 
   addEventListener("scroll", onScroll, { passive: true });
   updateChrome();
+
+  /*
+    One Lenis instance, desktop wheel only.
+    Touch stays native. GSAP ScrollTrigger is not loaded: the live site
+    already reveals sections with IntersectionObserver, and a second
+    scroll engine would measure layout on the same frames.
+  */
+  const lenisAllowed =
+    (legacyMotion || MOTION_PROFILE === "lenis" || (perfDiag && perfDiag.lenis === true)) &&
+    !reduceMotion &&
+    !(perfDiag && perfDiag.lenis === false) &&
+    matchMedia("(hover: hover) and (pointer: fine)").matches;
+  if (lenisAllowed) {
+    const studioSrc = [...document.scripts].map((s) => s.src).find((src) => /studio\.js/.test(src));
+    if (studioSrc) {
+      const loader = document.createElement("script");
+      loader.src = studioSrc.replace(/studio\.js.*$/, "vendor/lenis.min.js");
+      loader.onload = () => {
+        if (typeof Lenis !== "function" || window.__sehamLenis) return;
+        document.querySelectorAll("dialog").forEach((dialog) => {
+          dialog.setAttribute("data-lenis-prevent", "");
+        });
+        const lenis = new Lenis({
+          lerp: 0.092,
+          smoothWheel: true,
+          syncTouch: false,
+          wheelMultiplier: 1,
+          touchMultiplier: 1,
+          autoRaf: false,
+          anchors: { offset: -100 },
+        });
+        window.__sehamLenis = lenis;
+        let rafId = 0;
+        const gliding = () =>
+          !!lenis.isScrolling || Math.abs(lenis.targetScroll - lenis.animatedScroll) > 0.4;
+        lenisChromeBus = true;
+        const loop = (time) => {
+          lenis.raf(time);
+          scrollTicking = false;
+          updateChrome();
+          if (gliding() && !lenis.isStopped) rafId = requestAnimationFrame(loop);
+          else rafId = 0;
+        };
+        const wake = () => {
+          if (rafId || lenis.isStopped) return;
+          rafId = requestAnimationFrame(loop);
+        };
+        const scrollTo = lenis.scrollTo.bind(lenis);
+        lenis.scrollTo = function sehamScrollTo() {
+          const result = scrollTo.apply(lenis, arguments);
+          wake();
+          return result;
+        };
+        lenis.on("scroll", () => {
+          if (!rafId && !lenis.isStopped) wake();
+        });
+        const syncLock = () => {
+          if (document.documentElement.classList.contains("is-scroll-locked")) lenis.stop();
+          else if (lenis.isStopped) lenis.start();
+        };
+        new MutationObserver(syncLock).observe(document.documentElement, {
+          attributes: true,
+          attributeFilter: ["class"],
+        });
+        syncLock();
+        addEventListener("wheel", wake, { passive: true });
+        addEventListener(
+          "keydown",
+          (event) => {
+            if (
+              event.key === "ArrowDown" ||
+              event.key === "ArrowUp" ||
+              event.key === "PageDown" ||
+              event.key === "PageUp" ||
+              event.key === "Home" ||
+              event.key === "End" ||
+              event.key === " "
+            ) {
+              wake();
+            }
+          },
+          { passive: true }
+        );
+        if (document.documentElement.classList.contains("is-scroll-locked")) lenis.stop();
+      };
+      document.head.appendChild(loader);
+    }
+  }
 
   /* ---------- Editorial header signature ---------- */
   const BRAND_MOTTO = "DANCE · LOVE · GROW";
@@ -172,7 +291,13 @@
         else signature.setAttribute("lang", "en");
       };
 
-      if (!animate || reduceMotion || !mqSig.matches) {
+      if (
+        !legacyMotion ||
+        !animate ||
+        reduceMotion ||
+        !mqSig.matches ||
+        (perfDiag && perfDiag.headerSig === false)
+      ) {
         signature.classList.remove("is-leaving", "is-entering");
         commit();
         return;
@@ -222,65 +347,52 @@
     if (isHomepage && "IntersectionObserver" in window) {
       const observed = CHAPTERS.map((c) => {
         const el = document.querySelector(c.sel);
-        return el ? { el, key: c.sel } : null;
+        return el ? { el, key: c.sel, order: CHAPTERS.indexOf(c) } : null;
       }).filter(Boolean);
 
-      let visible = new Set();
-      let pickRaf = 0;
+      const visible = new Set();
+      const ratios = new Map();
+      let pickTimer = 0;
+      let lastPickKey = null;
 
       const pickActive = () => {
-        pickRaf = 0;
+        pickTimer = 0;
         if (document.documentElement.classList.contains("is-scroll-locked")) return;
         if (!mqSig.matches) return;
 
         const vh = window.innerHeight || 1;
         const docH = document.documentElement.scrollHeight || 1;
-        // Near page end, the footer owns the chapter even if the CTA still crosses the focus line
         const nearEnd = window.scrollY + vh >= docH - vh * 0.28;
         if (nearEnd && visible.has(".footer")) {
-          setActiveChapter(".footer", false);
+          if (lastPickKey !== ".footer") {
+            lastPickKey = ".footer";
+            setActiveChapter(".footer", false);
+          }
           return;
         }
 
-        // Focus line in the upper-middle viewport — stable, direction-agnostic
-        const focusY = vh * 0.36;
         let bestKey = null;
-        let bestDist = Infinity;
-
-        observed.forEach(({ el, key }) => {
+        let bestRatio = -1;
+        let bestOrder = -1;
+        observed.forEach(({ key, order }) => {
           if (!visible.has(key)) return;
-          const r = el.getBoundingClientRect();
-          if (r.bottom <= 0 || r.top >= vh) return;
-          // Prefer the section that currently owns the focus line
-          if (r.top <= focusY && r.bottom > focusY) {
-            const dist = Math.abs((r.top + r.bottom) / 2 - focusY);
-            if (dist < bestDist) {
-              bestDist = dist;
-              bestKey = key;
-            }
+          const ratio = ratios.get(key) || 0;
+          if (ratio > bestRatio || (ratio === bestRatio && order > bestOrder)) {
+            bestRatio = ratio;
+            bestOrder = order;
+            bestKey = key;
           }
         });
 
-        // Fallback: nearest section center to the focus line among visible ones
-        if (!bestKey) {
-          observed.forEach(({ el, key }) => {
-            if (!visible.has(key)) return;
-            const r = el.getBoundingClientRect();
-            const mid = (r.top + r.bottom) / 2;
-            const dist = Math.abs(mid - focusY);
-            if (dist < bestDist) {
-              bestDist = dist;
-              bestKey = key;
-            }
-          });
+        if (bestKey && bestKey !== lastPickKey) {
+          lastPickKey = bestKey;
+          setActiveChapter(bestKey, false);
         }
-
-        if (bestKey) setActiveChapter(bestKey, false);
       };
 
       const schedulePick = () => {
-        if (pickRaf) return;
-        pickRaf = requestAnimationFrame(pickActive);
+        if (pickTimer) return;
+        pickTimer = window.setTimeout(pickActive, 90);
       };
 
       const chapterIo = new IntersectionObserver(
@@ -288,16 +400,20 @@
           entries.forEach((entry) => {
             const item = observed.find((o) => o.el === entry.target);
             if (!item) return;
-            if (entry.isIntersecting) visible.add(item.key);
-            else visible.delete(item.key);
+            if (entry.isIntersecting) {
+              visible.add(item.key);
+              ratios.set(item.key, entry.intersectionRatio);
+            } else {
+              visible.delete(item.key);
+              ratios.delete(item.key);
+            }
           });
           schedulePick();
         },
         {
           root: null,
           rootMargin: "-12% 0px -28% 0px",
-          /* Fewer thresholds = fewer layout reads during scroll */
-          threshold: [0, 0.2, 0.55],
+          threshold: [0, 0.12, 0.28, 0.5, 0.72],
         }
       );
 
@@ -349,6 +465,7 @@
       }
       root.style.scrollBehavior = "auto";
       root.classList.add("is-scroll-locked");
+      if (window.__sehamLenis) window.__sehamLenis.stop();
       // Freeze visual position against any accidental scroll anchoring / focus scrolls
       window.scrollTo(0, lockedScrollY);
     }
@@ -365,6 +482,7 @@
     root.removeAttribute("data-sb-comp");
     root.style.removeProperty("--scroll-lock-offset");
     delete root.dataset.scrollY;
+    if (window.__sehamLenis && window.__sehamLenis.isStopped) window.__sehamLenis.start();
 
     // Restore exact position without smooth-scroll animation
     window.scrollTo(0, y);
@@ -554,13 +672,23 @@
     });
   }
 
-  if ("IntersectionObserver" in window && !reduceMotion) {
+  const gsapStackIntent =
+    legacyMotion ||
+    MOTION_PROFILE === "gsap" ||
+    (perfDiag && perfDiag.gsap === true);
+  const gsapDesktopWillRun =
+    gsapStackIntent && matchMedia(DESKTOP_CHOREO_Q).matches && !(perfDiag && perfDiag.gsap === false);
+
+  if ("IntersectionObserver" in window && !reduceMotion && !(perfDiag && perfDiag.decor === false)) {
     document.documentElement.classList.add("js-motion");
     const nodes = [
       ...document.querySelectorAll(
         ".reveal-line, .reveal-media, .reveal-measure, .section-heading, .feature-card, .product-editorial, .course-tile, .social-grid, .upcoming, .coming-index, .voices, .freedom-inner, .final-cta"
       ),
-    ];
+    ].filter((n) => {
+      if (!gsapDesktopWillRun) return true;
+      return !(n.classList.contains("freedom-inner") || n.classList.contains("final-cta"));
+    });
     const io = new IntersectionObserver(
       (entries) => {
         entries.forEach((e) => {
@@ -579,10 +707,20 @@
         n.classList.add("is-visible");
       } else {
         io.observe(n);
+        window.setTimeout(() => {
+          if (!n.classList.contains("is-visible")) {
+            n.classList.add("is-visible");
+            try {
+              io.unobserve(n);
+            } catch (_) {
+              /* ignore */
+            }
+          }
+        }, 2600);
       }
     });
 
-    const sectionalIn = document.querySelectorAll(".curated, .academy");
+    const sectionalIn = gsapDesktopWillRun ? [] : document.querySelectorAll(".curated, .academy");
     if (sectionalIn.length) {
       const sectionalIo = new IntersectionObserver(
         (entries) => {
@@ -633,6 +771,29 @@
       } else {
         canvasIo.observe(closingCanvas);
       }
+    }
+  }
+
+  /* Legacy / isolation: load GSAP stack on demand (?motion=legacy|gsap, ?perf=C|E|…) */
+  const gsapStackWanted =
+    gsapStackIntent && !(perfDiag && perfDiag.gsap === false);
+  if (gsapStackWanted && !document.querySelector("script[data-seham-motion]")) {
+    const studioSrc = [...document.scripts].map((s) => s.src).find((src) => /studio\.js/.test(src));
+    if (studioSrc) {
+      const base = studioSrc.replace(/studio\.js[^/]*$/, "");
+      const css = document.createElement("link");
+      css.rel = "stylesheet";
+      css.href = base + "seham-motion.css?v=rhythm-3.1";
+      document.head.appendChild(css);
+      const gsap = document.createElement("script");
+      gsap.src = base + "vendor/gsap.min.js?v=3.12.7";
+      gsap.onload = () => {
+        const motion = document.createElement("script");
+        motion.src = base + "seham-motion.js?v=rhythm-3.1";
+        motion.setAttribute("data-seham-motion", "");
+        document.head.appendChild(motion);
+      };
+      document.head.appendChild(gsap);
     }
   }
 })();
@@ -870,7 +1031,9 @@
   if (price) {
     document.querySelectorAll("input[name=currency]").forEach((x) =>
       x.addEventListener("change", () => {
-        if (x.checked) price.textContent = x.value === "USD" ? "$110" : "₪335";
+        if (!x.checked) return;
+        const orderPrices = { ILS: "₪335", USD: "$110", EUR: "€95" };
+        price.textContent = orderPrices[x.value] || "₪335";
       })
     );
   }
@@ -902,11 +1065,16 @@
   const saveData =
     (navigator.connection && navigator.connection.saveData) ||
     matchMedia("(prefers-reduced-data: reduce)").matches;
+  const coarsePointer = matchMedia("(pointer: coarse)").matches;
+  const narrowView = matchMedia("(max-width: 760px)").matches;
+  const needsGesture = coarsePointer && narrowView && !reduceMotion && !saveData;
   const lazySrc = video.getAttribute("data-src");
+  const viewPlayRatio = needsGesture ? 0.38 : narrowView ? 0.22 : 0.12;
 
-  let inView = false;
-  let userPaused = reduceMotion || saveData;
+  let shouldPlay = false;
+  let userPaused = reduceMotion || saveData || needsGesture;
   let sourceArmed = false;
+  let playPending = false;
 
   if (reduceMotion || saveData) media.classList.add("is-reduced");
 
@@ -918,39 +1086,42 @@
   video.setAttribute("disablepictureinpicture", "");
   video.setAttribute("controlslist", "nodownload nofullscreen noremoteplayback");
 
-  /* Strip eager <source> children so browsers cannot prefetch offscreen */
   if (lazySrc) {
     while (video.firstChild) video.removeChild(video.firstChild);
     video.removeAttribute("src");
   }
 
-  function revealLive() {
-    if (!video.paused) media.classList.add("is-live");
-  }
+  const revealLive = () => {
+    if (video.readyState >= 2) media.classList.add("is-live");
+  };
 
-  function concealLive() {
+  const concealLive = () => {
     media.classList.remove("is-live");
-  }
+  };
 
-  function armSource() {
+  const armSource = () => {
     if (sourceArmed) return;
     sourceArmed = true;
+    media.classList.add("is-prep");
     if (lazySrc) {
       const source = document.createElement("source");
       source.src = lazySrc;
       source.type = "video/mp4";
       video.appendChild(source);
     }
-    video.preload = reduceMotion || saveData ? "metadata" : "auto";
+    video.preload = "metadata";
     try {
       video.load();
     } catch (_) {
-      /* keep quiet */
+      /* ignore */
     }
-  }
+  };
 
-  async function tryPlay() {
-    if (userPaused || !inView || document.hidden) return;
+  const tryPlay = async () => {
+    if (playPending) return;
+    if (userPaused || !shouldPlay || document.hidden) return;
+    if (perfDiag && perfDiag.video === false) return;
+    playPending = true;
     armSource();
     video.muted = true;
     video.playsInline = true;
@@ -960,57 +1131,95 @@
       if (playPromise && typeof playPromise.then === "function") {
         await playPromise;
       }
-      revealLive();
     } catch (_) {
       concealLive();
+    } finally {
+      playPending = false;
     }
-  }
+  };
 
-  function pauseSoftly() {
-    if (!video.paused) {
-      video.pause();
-    }
+  const pauseSoftly = () => {
+    shouldPlay = false;
+    if (!video.paused) video.pause();
     concealLive();
-  }
+  };
 
+  video.addEventListener("loadeddata", revealLive, { once: false });
   video.addEventListener("playing", revealLive);
-  video.addEventListener("pause", () => {
-    /* retain last frame; no overlay */
-  });
   video.addEventListener("error", () => {
     concealLive();
     userPaused = true;
   });
 
   if ("IntersectionObserver" in window) {
-    const io = new IntersectionObserver(
+    const prepMargin = narrowView ? "120px 0px 200px 0px" : "280px 0px 360px 0px";
+    const playMargin = narrowView ? "8% 0px 6% 0px" : "10% 0px 8% 0px";
+
+    const prepIo = new IntersectionObserver(
+      (entries) => {
+        if (entries.some((e) => e.isIntersecting)) {
+          armSource();
+          prepIo.disconnect();
+        }
+      },
+      { threshold: 0, rootMargin: prepMargin }
+    );
+    prepIo.observe(media);
+
+    const playIo = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
-          inView = entry.isIntersecting && entry.intersectionRatio >= 0.28;
-          if (inView) {
-            armSource();
+          shouldPlay = entry.isIntersecting && entry.intersectionRatio >= viewPlayRatio;
+          if (shouldPlay) {
             tryPlay();
-          } else {
+          } else if (!entry.isIntersecting) {
             pauseSoftly();
           }
         });
       },
-      { threshold: [0, 0.28, 0.55], rootMargin: "8% 0px" }
+      { threshold: [0, 0.12, 0.22, 0.38, 0.55], rootMargin: playMargin }
     );
-    io.observe(media);
+    playIo.observe(media);
   } else {
-    inView = true;
-    armSource();
+    shouldPlay = true;
     tryPlay();
   }
 
   document.addEventListener("visibilitychange", () => {
-    if (document.hidden) {
-      pauseSoftly();
-    } else {
-      tryPlay();
-    }
+    if (document.hidden) pauseSoftly();
+    else if (shouldPlay) tryPlay();
   });
+
+  if (needsGesture) {
+    const frame = media.closest(".academy-flagship-frame");
+    if (frame) {
+      frame.setAttribute("role", "button");
+      frame.setAttribute("tabindex", "0");
+      frame.style.pointerEvents = "auto";
+      frame.setAttribute(
+        "aria-label",
+        document.documentElement.lang === "en"
+          ? "Play academy video"
+          : "تشغيل فيديو الأكاديمية"
+      );
+      const unlock = () => {
+        userPaused = false;
+        shouldPlay = true;
+        tryPlay();
+      };
+      frame.addEventListener("click", unlock, { once: true });
+      frame.addEventListener(
+        "keydown",
+        (event) => {
+          if (event.key === "Enter" || event.key === " ") {
+            event.preventDefault();
+            unlock();
+          }
+        },
+        { once: true }
+      );
+    }
+  }
 })();
 
 (() => {

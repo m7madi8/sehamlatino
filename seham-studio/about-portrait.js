@@ -3,6 +3,12 @@
   const section = document.querySelector(".about-portrait");
   if (!section) return;
 
+  const DESKTOP_CHOREO =
+    "(min-width: 761px) and (prefers-reduced-motion: no-preference) and (hover: hover) and (pointer: fine)";
+  if (DESKTOP_CHOREO && matchMedia(DESKTOP_CHOREO).matches && document.querySelector("script[data-seham-motion]")) {
+    return;
+  }
+
   const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
   if (reduce || !("IntersectionObserver" in window)) return;
 

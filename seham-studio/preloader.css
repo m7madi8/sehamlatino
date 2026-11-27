@@ -1,79 +1,12 @@
-/* Seham Latino — brand preloader (homepage). Load before studio.css overrides. */
+/* Seham Latino — handwritten signature preloader (homepage) */
 html.is-preloading,
 html.is-preloading body {
   overflow: hidden;
   height: 100%;
 }
 
-#intro {
-  --ink: #2a0710;
-  --ink-deep: #1c040a;
-  --ink-lift: #3b0c18;
-  position: fixed;
-  inset: 0;
-  z-index: 9999;
-  overflow: hidden;
-  pointer-events: auto;
-  touch-action: none;
-}
+:root{--ink:#2A0710;--ivory:#F4EEE4;--gold:#E6D3A6}#intro{position:fixed;inset:0;z-index:9999;overflow:hidden;background:var(--ink);background:radial-gradient(ellipse at 50% 40%,#3B0C18 0%,#2A0710 60%,#1C040A 100%);display:grid;place-items:center;pointer-events:auto;touch-action:none;visibility:hidden}#intro.run{visibility:visible;animation:curtain .52s cubic-bezier(.65,0,.22,1) 1.42s both}.mark{width:clamp(215px,34vw,440px);max-width:76vw;position:relative}.mark svg{display:block;width:100%;height:auto}.run .mark{animation:departure .38s ease 1.36s forwards}.draw{stroke:#fff;fill:none;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:1;stroke-dashoffset:1}.run .draw{animation:draw var(--time) linear var(--delay) both}.run .finish{animation:finish .06s linear 1.22s both}@keyframes draw{to{stroke-dashoffset:0}}@keyframes finish{from{opacity:0}to{opacity:1}}.thread{position:absolute;left:26%;right:26%;bottom:-23px;height:1px;background:linear-gradient(90deg,transparent,#E6D3A6,transparent);transform-origin:center;opacity:0}.run .thread{animation:thread .32s ease 1.04s both}@keyframes signature{from{opacity:0;transform:translateY(9px) scale(.975)}to{opacity:1;transform:translateY(0) scale(1)}}@keyframes unveil{from{clip-path:inset(0 100% 0 0)}to{clip-path:inset(0 0 0 0)}}@keyframes thread{0%{opacity:0;transform:scaleX(.12)}55%{opacity:.7}100%{opacity:.25;transform:scaleX(1)}}@keyframes departure{to{opacity:0;transform:translateY(-14px) scale(1.015)}}@keyframes curtain{from{transform:translateY(0);border-radius:0}to{transform:translateY(-102%);border-radius:0 0 48% 48% / 0 0 9% 9%;visibility:hidden}}@media(prefers-reduced-motion:reduce){#intro.run{animation:reduced .15s linear both}.run .mark,.run .mark svg,.run .thread{animation:none}.thread{display:none}.draw{stroke-dashoffset:0;animation:none!important}.finish{opacity:1;animation:none!important}@keyframes reduced{to{opacity:0;visibility:hidden}}}
 
 #intro[hidden] {
   display: none !important;
-}
-
-#intro .curtain {
-  position: absolute;
-  left: -10%;
-  right: -10%;
-  top: 0;
-  height: 130%;
-  background: radial-gradient(
-    70% 55% at 50% 38%,
-    var(--ink-lift) 0%,
-    var(--ink) 55%,
-    var(--ink-deep) 100%
-  );
-  border-radius: 0 0 50% 50% / 0 0 14% 14%;
-  will-change: transform;
-  transform: translateZ(0);
-}
-
-#intro .mark {
-  position: absolute;
-  left: 50%;
-  top: 50%;
-  width: clamp(260px, 36vw, 540px);
-  aspect-ratio: 890 / 526;
-  transform: translate(-50%, -50%);
-  will-change: transform, opacity;
-}
-
-#intro .mark svg {
-  width: 100%;
-  height: 100%;
-  display: block;
-  overflow: visible;
-}
-
-#intro .tb {
-  transform-box: fill-box;
-}
-
-/* Hold signature elements invisible until GSAP starts (avoids FOUC).
-   LATINO wordmark uses clip-path width; rules use scaleX — do not opacity-hide those. */
-#intro .sl,
-#intro #sigFull,
-#intro #pen,
-#intro #tag,
-#intro #spark,
-#intro #gem,
-#intro #rg {
-  opacity: 0;
-}
-
-@media (prefers-reduced-motion: reduce) {
-  #intro .curtain,
-  #intro .mark {
-    will-change: auto;
-  }
 }

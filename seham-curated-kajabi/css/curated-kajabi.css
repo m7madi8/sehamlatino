@@ -1,0 +1,1178 @@
+/* Seham Latino — curated section (Kajabi pack)
+   Upload this file in Kajabi: Page settings → Custom CSS, or Theme custom CSS. */
+
+
+:root {
+  --paper: #f6eee6;
+  --ivory: #fbf6f0;
+  /* Shared closing surface — curated experiences + final CTA */
+  --canvas-close: var(--ivory);
+  /* Refined architectural hem — soft silk amplitude, not a decorative wave */
+  /* Soft straight footer lip — not an organic wave */
+  --footer-edge-h: clamp(28px, 3.4vw, 44px);
+  --footer-radius: clamp(22px, 2.8vw, 40px);
+  --blush: #e8d5cf;
+  --ink: #2c1a1c;
+  --garnet: #5c1a32;
+  --wine: #5c1a32;
+  --deep: #241018;
+  --night: #241018;
+  --footer: #431326;
+  --plum: #431326;
+  --rose: #c9a09a;
+  --muted: #5e4644;
+  --line: color-mix(in srgb, var(--garnet) 10%, transparent);
+  --line-strong: color-mix(in srgb, var(--garnet) 18%, transparent);
+  --edge: clamp(20px, 5vw, 88px);
+  --max: 1440px;
+  --header-h: 88px;
+  --ease-out: cubic-bezier(0.22, 0.8, 0.2, 1);
+  --ease-soft: cubic-bezier(0.33, 0.1, 0.2, 1);
+  --ease-silk: cubic-bezier(0.25, 0.8, 0.25, 1);
+  --english-display: "Jost", "Helvetica Neue", Arial, sans-serif;
+  --arabic-display: "Fustat", "Noto Naskh Arabic", serif;
+  --body-ar: "Tajawal", "Segoe UI", Tahoma, sans-serif;
+  --body-en: "Cormorant Garamond", Georgia, "Times New Roman", serif;
+  --logotype: "Alegre Script Pro", "Snell Roundhand", cursive;
+
+  /* Soft geometry — Cadencia Íntima */
+  --radius-xs: 8px;
+  --radius-sm: 12px;
+  --radius-md: 18px;
+  --radius-lg: 24px;
+  --radius-xl: 32px;
+  --radius-2xl: clamp(28px, 3.5vw, 44px);
+  --radius-btn: 14px;
+  --radius-field: 12px;
+  --radius-chip: 999px;
+  --radius-control: 10px;
+  --shadow-soft: 0 12px 36px color-mix(in srgb, var(--deep) 7%, transparent);
+  --shadow-whisper: 0 6px 20px color-mix(in srgb, var(--deep) 5%, transparent);
+
+  /* Homepage hero copy — warm off-white, not pure #fff */
+  --hero-heading: #f0e8d8;
+  --hero-description: #f0e8d8;
+  --hero-secondary: #f0e8d8;
+  --hero-cta-bg: #faf5ef;
+  --hero-cta-text: #581427;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  background: var(--paper);
+  color: var(--ink);
+  font: 16px / 1.75 var(--body-ar);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+  font-family: var(--english-display);
+  font-weight: 300;
+  letter-spacing: 0.08em;
+  line-height: 1.15;
+
+h1,
+h2,
+h3,
+p,
+figure,
+blockquote {
+  margin: 0;
+}
+
+h1,
+h2 {
+  font-family: var(--arabic-display);
+  font-weight: 400;
+  line-height: 1.4;
+  letter-spacing: 0;
+}
+
+.logotype {
+  font-family: var(--logotype);
+  font-weight: 400;
+  letter-spacing: 0;
+  text-transform: none;
+}
+
+h1 {
+  font-size: clamp(2.8rem, 7.2vw, 6.8rem);
+}
+
+h2 {
+  font-size: clamp(2rem, 4.4vw, 4.4rem);
+}
+
+h3 {
+  font-weight: 500;
+  line-height: 1.35;
+}
+
+em {
+  font-style: normal;
+  color: var(--garnet);
+}
+
+p {
+  max-width: 62ch;
+}
+
+/* ---------- Utilities ---------- */
+
+.wrap {
+  max-width: var(--max);
+  margin-inline: auto;
+  padding-inline: var(--edge);
+}
+
+.section {
+  padding-block: clamp(72px, 10vw, 148px);
+}
+
+/* ---------- Direction-aware CTA arrow (Lucide ArrowUpLeft / ArrowUpRight) ---------- */
+.cta-arrow {
+  width: 15px;
+  height: 15px;
+  display: block;
+  flex: 0 0 auto;
+  flex-shrink: 0;
+  overflow: visible;
+  color: currentColor;
+  stroke: currentColor;
+  fill: none;
+  pointer-events: none;
+  transition: transform 0.3s var(--ease-silk);
+}
+
+.cta-arrow__rtl {
+  display: none;
+}
+
+html[dir="rtl"] .cta-arrow__ltr {
+  display: none;
+}
+
+html[dir="rtl"] .cta-arrow__rtl {
+  display: inline;
+}
+
+/* ---------- Closing canvas: curated + CTA as one ivory surface ---------- */
+
+.closing-canvas {
+  position: relative;
+  background: var(--canvas-close);
+  isolation: isolate;
+  /* Contain silk to the continuous canvas — free across internal section seams */
+  overflow: hidden;
+  contain: paint style;
+}
+
+.freedom,
+.about-portrait {
+  contain: layout style;
+}
+
+.closing-silk {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  overflow: visible;
+}
+
+.closing-silk img {
+  position: absolute;
+  display: block;
+  height: auto;
+  max-width: none;
+  pointer-events: none;
+  /* Defer multiply until canvas enters — avoids offscreen blend paints */
+  mix-blend-mode: normal;
+  user-select: none;
+  -webkit-user-drag: none;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .closing-canvas.is-in .closing-silk img {
+    mix-blend-mode: multiply;
+  }
+}
+
+/* Upper silk: straddles curated→CTA seam; physical upper-left in RTL (inline-end) */
+.closing-silk-upper {
+  width: min(900px, 76vw);
+  inset-inline-end: -8%;
+  top: auto;
+  /* Higher bottom offset → sits across curated padding + CTA crown */
+  bottom: calc(var(--footer-edge-h) + clamp(14rem, 38vw, 22rem));
+  opacity: 0.52;
+  transform: scaleX(-1) rotate(5deg);
+}
+
+/* Lower silk: physical lower-right in RTL (inline-start) — clear of footer edge */
+.closing-silk-lower {
+  width: min(1040px, 84vw);
+  inset-inline-start: -10%;
+  top: auto;
+  bottom: calc(var(--footer-edge-h) + clamp(48px, 6.5vw, 88px));
+  opacity: 0.6;
+  transform: rotate(-3deg);
+}
+
+html[dir="ltr"] .closing-silk-upper {
+  transform: rotate(-5deg);
+}
+
+html[dir="ltr"] .closing-silk-lower {
+  transform: scaleX(-1) rotate(3deg);
+}
+
+.closing-canvas .curated,
+.closing-canvas .final-cta {
+  position: relative;
+  z-index: 1;
+  background: transparent;
+}
+
+/* ---------- Curated experiences (homepage) ---------- */
+
+.curated {
+  --xp-gap: clamp(14px, 1.5vw, 24px);
+  --xp-radius: clamp(26px, 2.6vw, 38px);
+  --xp-cta-h: 48px;
+  padding-block: clamp(56px, 7.5vw, 104px);
+  /* Transparent — inherits continuous ivory from .closing-canvas (seamless with About) */
+  background: transparent;
+}
+
+.curated-head {
+  margin: 0 auto clamp(1.65rem, 3.4vw, 2.85rem);
+  text-align: center;
+  max-width: 100%;
+}
+
+.curated-br {
+  display: none;
+}
+
+.curated-head h2 {
+  margin: 0;
+  font-family: var(--arabic-display);
+  font-size: clamp(1.85rem, 3.6vw, 3.15rem);
+  font-weight: 400;
+  line-height: 1.4;
+  letter-spacing: 0;
+  color: var(--garnet);
+  text-wrap: balance;
+  white-space: nowrap;
+}
+
+html[dir="ltr"] .curated-head h2 {
+  font-family: var(--english-display);
+  font-weight: 300;
+  letter-spacing: 0.08em;
+  line-height: 1.15;
+  text-transform: uppercase;
+}
+
+.curated-stage {
+  display: grid;
+  grid-template-columns: minmax(0, 1.38fr) minmax(0, 1fr);
+  gap: var(--xp-gap);
+  align-items: stretch;
+  min-height: clamp(460px, 58vw, 620px);
+}
+
+.curated-secondary {
+  display: grid;
+  grid-template-rows: 1.08fr 0.92fr;
+  gap: var(--xp-gap);
+  min-height: 0;
+}
+
+.xp {
+  position: relative;
+  display: block;
+  overflow: hidden;
+  color: inherit;
+  isolation: isolate;
+  min-width: 0;
+  min-height: 0;
+  text-decoration: none;
+  border-radius: var(--xp-radius);
+  transition: transform 0.45s var(--ease-silk);
+}
+
+.xp:focus-visible {
+  outline: 2px solid var(--garnet);
+  outline-offset: 3px;
+}
+
+/* —— Studio: cinematic editorial campaign poster —— */
+
+.xp--studio {
+  background: var(--garnet);
+  color: #fff;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+}
+
+.xp-media {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
+  border-radius: inherit;
+}
+
+.xp-media img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  /* Seham centered as hero — face + arched neck primary; crouch preserved */
+  object-position: 50% 28%;
+  transform: scale(1.02);
+  transform-origin: 50% 36%;
+  transition:
+    transform 0.9s var(--ease-silk),
+    opacity 0.9s var(--ease-silk);
+}
+
+html[dir="ltr"] .xp-media img {
+  object-position: 48% 26%;
+  transform-origin: 48% 34%;
+}
+
+/* Restrained burgundy floor — readability only, photograph remains dominant */
+.xp--studio::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  background: linear-gradient(
+    to top,
+    color-mix(in srgb, var(--garnet) 82%, transparent) 0%,
+    color-mix(in srgb, var(--garnet) 48%, transparent) 18%,
+    color-mix(in srgb, var(--garnet) 18%, transparent) 38%,
+    transparent 56%
+  );
+}
+
+.xp--studio .xp-copy {
+  position: relative;
+  z-index: 2;
+  padding: clamp(1.35rem, 2.6vw, 2.05rem);
+  padding-block-end: clamp(1.4rem, 2.5vw, 1.95rem);
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.38rem;
+  max-width: min(100%, 34ch);
+  background: transparent;
+  text-align: start;
+}
+
+/* —— Shared editorial photo panel —— */
+
+.xp-photo {
+  position: relative;
+  min-height: 0;
+  align-self: stretch;
+  overflow: hidden;
+  z-index: 0;
+}
+
+.xp-photo img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center center;
+  /* Pixels are already upright — do not re-apply EXIF orientation */
+  image-orientation: none;
+  transform: scale(1.03);
+  transition: transform 0.9s var(--ease-silk);
+}
+
+/* —— Coaching: warm ivory editorial —— */
+
+.xp--coach {
+  background:
+    linear-gradient(
+      155deg,
+      #fffdf9 0%,
+      color-mix(in srgb, var(--ivory) 82%, var(--blush)) 100%
+    );
+  display: grid;
+  grid-template-columns: minmax(0, 0.92fr) minmax(0, 1.08fr);
+  align-items: stretch;
+  padding: 0;
+}
+
+.xp--coach .xp-photo {
+  /* Soft seam into ivory — fades toward copy */
+  -webkit-mask-image: linear-gradient(to right, #000 0%, #000 72%, transparent 100%);
+  mask-image: linear-gradient(to right, #000 0%, #000 72%, transparent 100%);
+}
+
+html[dir="rtl"] .xp--coach .xp-photo {
+  -webkit-mask-image: linear-gradient(to left, #000 0%, #000 72%, transparent 100%);
+  mask-image: linear-gradient(to left, #000 0%, #000 72%, transparent 100%);
+}
+
+.xp--coach .xp-photo img {
+  /* Face + raised arm — upright portrait */
+  object-position: 58% 22%;
+}
+
+html[dir="ltr"] .xp--coach .xp-photo img {
+  object-position: 52% 20%;
+}
+
+.xp--coach .xp-copy {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
+  gap: 0.4rem;
+  min-width: 0;
+  padding: clamp(1.15rem, 2.1vw, 1.7rem) clamp(1.05rem, 1.9vw, 1.55rem);
+  padding-inline-start: clamp(0.55rem, 1vw, 0.9rem);
+  z-index: 1;
+}
+
+.xp--coach small {
+  color: color-mix(in srgb, var(--garnet) 55%, var(--muted));
+}
+
+.xp--coach h3 {
+  font-size: clamp(1.4rem, 2.1vw, 1.95rem);
+  color: var(--garnet);
+  max-width: 11ch;
+}
+
+html[dir="ltr"] .xp--coach h3 {
+  max-width: 12ch;
+}
+
+.xp--coach p {
+  color: var(--muted);
+  font-size: clamp(0.88rem, 1.05vw, 0.98rem);
+  max-width: 24ch;
+  line-height: 1.55;
+}
+
+/* —— Live coaching: intimate burgundy campaign —— */
+
+.xp--live {
+  background: var(--garnet);
+  color: #fff;
+  display: grid;
+  grid-template-columns: minmax(0, 0.95fr) minmax(0, 1.05fr);
+  align-items: stretch;
+  padding: 0;
+  overflow: hidden;
+}
+
+.xp--live .xp-photo {
+  -webkit-mask-image: linear-gradient(to right, #000 0%, #000 68%, transparent 100%);
+  mask-image: linear-gradient(to right, #000 0%, #000 68%, transparent 100%);
+}
+
+html[dir="rtl"] .xp--live .xp-photo {
+  -webkit-mask-image: linear-gradient(to left, #000 0%, #000 68%, transparent 100%);
+  mask-image: linear-gradient(to left, #000 0%, #000 68%, transparent 100%);
+}
+
+.xp--live .xp-photo img {
+  /* Warm smile, hand-in-hair — upright portrait */
+  object-position: 48% 18%;
+  filter: saturate(1.04) contrast(1.02);
+}
+
+html[dir="ltr"] .xp--live .xp-photo img {
+  object-position: 50% 16%;
+}
+
+.xp--live .xp-copy {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
+  gap: 0.42rem;
+  min-width: 0;
+  padding: clamp(1.2rem, 2.2vw, 1.75rem) clamp(1.1rem, 2vw, 1.6rem);
+  padding-inline-start: clamp(0.5rem, 1vw, 0.85rem);
+}
+
+.xp--live h3 {
+  color: #fff;
+  font-size: clamp(1.45rem, 2.35vw, 2.05rem);
+  max-width: 11ch;
+}
+
+html[dir="ltr"] .xp--live h3 {
+  max-width: 13ch;
+}
+
+.xp--live p {
+  color: color-mix(in srgb, #fff 78%, transparent);
+  font-size: clamp(0.88rem, 1.05vw, 0.98rem);
+  max-width: 26ch;
+  line-height: 1.55;
+}
+
+.xp--live small {
+  color: color-mix(in srgb, var(--rose) 40%, #fff 60%);
+  font-size: 0.72rem;
+  letter-spacing: 0.06em;
+}
+
+html[dir="ltr"] .xp--live small {
+  letter-spacing: 0.12em;
+  font-size: 0.64rem;
+}
+
+/* —— Shared type + CTAs —— */
+
+.xp small {
+  display: block;
+  font-size: 0.7rem;
+  font-weight: 500;
+  letter-spacing: 0.05em;
+  color: var(--muted);
+}
+
+html[dir="ltr"] .xp small {
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  font-size: 0.62rem;
+}
+
+.xp h3 {
+  margin: 0;
+  font-family: var(--arabic-display);
+  font-weight: 400;
+  line-height: 1.2;
+}
+
+html[dir="ltr"] .xp h3 {
+  font-family: var(--english-display);
+  font-weight: 300;
+  letter-spacing: 0.08em;
+  line-height: 1.15;
+  text-transform: uppercase;
+}
+
+.xp p {
+  margin: 0;
+  line-height: 1.55;
+}
+
+/* Studio type — after shared rules so ivory/rose contrast wins on photography */
+.xp.xp--studio small {
+  color: color-mix(in srgb, var(--rose) 42%, #fff 58%);
+  font-size: 0.72rem;
+  letter-spacing: 0.06em;
+  margin-bottom: 0.15rem;
+  text-shadow: 0 1px 18px color-mix(in srgb, var(--garnet) 40%, transparent);
+}
+
+html[dir="ltr"] .xp.xp--studio small {
+  letter-spacing: 0.12em;
+  font-size: 0.64rem;
+}
+
+.xp.xp--studio h3 {
+  color: var(--ivory);
+  font-size: clamp(1.85rem, 2.9vw, 2.7rem);
+  line-height: 1.18;
+  letter-spacing: 0;
+  text-shadow: 0 1px 24px color-mix(in srgb, var(--garnet) 40%, transparent);
+}
+
+html[dir="ltr"] .xp.xp--studio h3 {
+  letter-spacing: 0.09em;
+  line-height: 1.12;
+}
+
+.xp.xp--studio p {
+  color: color-mix(in srgb, var(--ivory) 84%, transparent);
+  max-width: 30ch;
+  font-size: clamp(0.92rem, 1.1vw, 1.02rem);
+  line-height: 1.5;
+  margin-top: 0.08rem;
+  text-shadow: 0 1px 16px color-mix(in srgb, var(--garnet) 30%, transparent);
+}
+
+.xp.xp--studio .xp-cta {
+  margin-top: 0.85rem;
+  border-radius: var(--radius-btn);
+  box-shadow: none;
+}
+
+.xp-cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-top: 0.7rem;
+  min-height: var(--xp-cta-h);
+  padding: 0.65rem 1.2rem;
+  border-radius: 16px;
+  border: 1px solid transparent;
+  background: var(--ivory);
+  color: var(--garnet);
+  font-size: 0.88rem;
+  font-weight: 500;
+  line-height: 1.2;
+  transition:
+    background 0.32s var(--ease-silk),
+    color 0.32s var(--ease-silk),
+    transform 0.32s var(--ease-silk),
+    border-color 0.32s var(--ease-silk),
+    box-shadow 0.32s var(--ease-silk);
+}
+
+.xp-arrow,
+.xp-cta .cta-arrow {
+  width: 0.85rem;
+  height: 0.85rem;
+  flex-shrink: 0;
+  transition: transform 0.32s var(--ease-silk);
+}
+
+.xp-cta--solid {
+  background: var(--garnet);
+  color: #fff;
+}
+
+.xp-cta--ivory {
+  background: var(--ivory);
+  color: var(--garnet);
+}
+
+.xp:hover .xp-media img,
+.xp:focus-visible .xp-media img,
+.xp:hover .xp-photo img,
+.xp:focus-visible .xp-photo img {
+  transform: scale(1.06);
+}
+
+/* Studio: quieter Ken Burns — never pan away from Seham */
+.xp--studio:hover .xp-media img,
+.xp--studio:focus-visible .xp-media img {
+  transform: scale(1.035);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .xp--coach:hover,
+  .xp--live:hover {
+    transform: translateY(-2px);
+  }
+}
+
+.xp--studio:hover .xp-cta,
+.xp--studio:focus-visible .xp-cta {
+  background: #fff;
+  color: var(--garnet);
+  box-shadow: 0 4px 16px color-mix(in srgb, var(--garnet) 16%, transparent);
+  transform: translateY(-1px);
+}
+
+.xp--coach:hover .xp-cta--solid,
+.xp--coach:focus-visible .xp-cta--solid {
+  background: color-mix(in srgb, var(--garnet) 88%, #000);
+  box-shadow: 0 8px 20px color-mix(in srgb, var(--garnet) 22%, transparent);
+}
+
+.xp--live:hover .xp-cta--ivory,
+.xp--live:focus-visible .xp-cta--ivory {
+  background: #fff;
+  box-shadow: 0 8px 20px color-mix(in srgb, var(--deep) 16%, transparent);
+}
+
+html[dir="rtl"] .xp:hover .xp-arrow,
+html[dir="rtl"] .xp:focus-visible .xp-arrow,
+html[dir="rtl"] .xp:hover .cta-arrow,
+html[dir="rtl"] .xp:focus-visible .cta-arrow {
+  transform: translate(-2px, -2px);
+}
+
+html[dir="ltr"] .xp:hover .xp-arrow,
+html[dir="ltr"] .xp:focus-visible .xp-arrow,
+html[dir="ltr"] .xp:hover .cta-arrow,
+html[dir="ltr"] .xp:focus-visible .cta-arrow {
+  transform: translate(2px, -2px);
+}
+
+/* Curated entrance choreography — keep art direction, shorten travel for scroll safety */
+.js-motion .curated-head,
+.js-motion .xp {
+  opacity: 0;
+  transform: translateY(12px);
+  transition:
+    opacity 0.55s var(--ease-silk),
+    transform 0.55s var(--ease-silk);
+}
+
+/* Studio: cinematic uncover — soft scale + opacity, then type cascade */
+.js-motion .xp--studio {
+  transform: translateY(14px) scale(0.992);
+  transition:
+    opacity 0.62s var(--ease-silk),
+    transform 0.62s var(--ease-silk);
+}
+
+.js-motion .xp--studio .xp-media img {
+  opacity: 0;
+  transform: scale(1.05);
+}
+
+.js-motion .xp--studio .xp-copy > * {
+  opacity: 0;
+  transform: translateY(10px);
+  transition:
+    opacity 0.58s var(--ease-silk),
+    transform 0.58s var(--ease-silk);
+}
+
+.js-motion .curated.is-in .curated-head {
+  opacity: 1;
+  transform: none;
+}
+
+.js-motion .curated.is-in .xp {
+  opacity: 1;
+  transform: none;
+}
+
+.js-motion .curated.is-in .xp--studio {
+  transition-delay: 60ms;
+}
+
+.js-motion .curated.is-in .xp--studio .xp-media img {
+  opacity: 1;
+  transform: scale(1.02);
+  transition-delay: 40ms;
+}
+
+.js-motion .curated.is-in .xp--studio:hover .xp-media img,
+.js-motion .curated.is-in .xp--studio:focus-visible .xp-media img {
+  transform: scale(1.035);
+}
+
+.js-motion .curated.is-in .xp--studio .xp-copy > *:nth-child(1) {
+  opacity: 1;
+  transform: none;
+  transition-delay: 80ms;
+}
+
+.js-motion .curated.is-in .xp--studio .xp-copy > *:nth-child(2) {
+  opacity: 1;
+  transform: none;
+  transition-delay: 120ms;
+}
+
+.js-motion .curated.is-in .xp--studio .xp-copy > *:nth-child(3) {
+  opacity: 1;
+  transform: none;
+  transition-delay: 160ms;
+}
+
+.js-motion .curated.is-in .xp--studio .xp-copy > *:nth-child(4) {
+  opacity: 1;
+  transform: none;
+  transition-delay: 200ms;
+}
+
+.js-motion .curated.is-in .xp--coach {
+  transition-delay: 70ms;
+}
+
+.js-motion .curated.is-in .xp--live {
+  transition-delay: 110ms;
+}
+
+/* Intentional editorial break when single-line would feel cramped */
+@media (max-width: 1180px) and (min-width: 821px) {
+  .curated-br {
+    display: inline;
+  }
+
+  .curated-head h2 {
+    white-space: normal;
+  }
+}
+
+/* Desktop flagship — more headroom, type anchored in the lower third */
+@media (min-width: 1025px) {
+  .xp-media img {
+    object-position: 50% 22%;
+  }
+
+  html[dir="ltr"] .xp-media img {
+    object-position: 48% 20%;
+  }
+
+  .xp--studio::after {
+    background: linear-gradient(
+      to top,
+      color-mix(in srgb, var(--garnet) 72%, transparent) 0%,
+      color-mix(in srgb, var(--garnet) 38%, transparent) 20%,
+      color-mix(in srgb, var(--garnet) 12%, transparent) 38%,
+      transparent 54%
+    );
+  }
+
+  .xp--studio .xp-copy {
+    max-width: min(100%, 32ch);
+  }
+
+  .xp.xp--studio h3 {
+    font-size: clamp(1.95rem, 2.6vw, 2.75rem);
+  }
+}
+
+/* —— Tablet: studio full-bleed poster, pair below —— */
+@media (max-width: 1024px) {
+  .curated-stage {
+    grid-template-columns: 1fr;
+    min-height: 0;
+    gap: var(--xp-gap);
+  }
+
+  .xp--studio {
+    width: 100%;
+    max-width: 100%;
+    aspect-ratio: 5 / 6;
+    min-height: 0;
+    height: auto;
+    max-height: none;
+  }
+
+  .xp-media img {
+    object-position: 50% 24%;
+  }
+
+  html[dir="ltr"] .xp-media img {
+    object-position: 48% 22%;
+  }
+
+  .xp--studio .xp-copy {
+    max-width: min(100%, 38ch);
+    padding: clamp(1.5rem, 3vw, 2.1rem);
+  }
+
+  .xp.xp--studio h3 {
+    font-size: clamp(2rem, 4.2vw, 2.55rem);
+  }
+
+  .xp--studio .xp-cta {
+    width: auto;
+  }
+
+  .curated-secondary {
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: none;
+    min-height: clamp(280px, 36vw, 360px);
+  }
+
+  .xp--coach,
+  .xp--live {
+    grid-template-columns: minmax(0, 0.88fr) minmax(0, 1.12fr);
+  }
+}
+
+/* —— Mobile-first editorial stacks —— */
+@media (max-width: 820px) {
+  .curated-head {
+    margin-bottom: 1.35rem;
+  }
+
+  .curated-br {
+    display: inline;
+  }
+
+  .curated-head h2 {
+    font-size: clamp(1.75rem, 6.2vw, 2.35rem);
+    line-height: 1.28;
+    white-space: normal;
+    max-width: none;
+    margin-inline: auto;
+  }
+
+  .curated-stage {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+
+  .curated-secondary {
+    grid-template-columns: 1fr;
+    grid-template-rows: none;
+    gap: 1rem;
+    min-height: 0;
+  }
+
+  /* Studio: mobile campaign poster — one plane, not a stacked UI card */
+  .xp--studio {
+    width: 100%;
+    max-width: 100%;
+    /* Aspect alone drives height — never pair with a taller min-height (overflow) */
+    aspect-ratio: 4 / 5;
+    min-height: 0;
+    height: auto;
+    /* Cap only on small phones (see 560px); mid widths keep true 4:5 */
+    max-height: none;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    border-radius: clamp(24px, 6vw, 32px);
+  }
+
+  .xp-media {
+    position: absolute;
+    inset: 0;
+    min-height: 0;
+    aspect-ratio: auto;
+    max-height: none;
+    border-radius: inherit;
+  }
+
+  .xp-media img {
+    object-position: 50% 30%;
+  }
+
+  html[dir="ltr"] .xp-media img {
+    object-position: 48% 28%;
+  }
+
+  .xp--studio::after {
+    background: linear-gradient(
+      to top,
+      color-mix(in srgb, var(--garnet) 78%, transparent) 0%,
+      color-mix(in srgb, var(--garnet) 48%, transparent) 26%,
+      color-mix(in srgb, var(--garnet) 16%, transparent) 46%,
+      transparent 62%
+    );
+  }
+
+  .xp--studio .xp-copy {
+    max-width: none;
+    width: 100%;
+    background: transparent;
+    padding: 1.35rem 1.2rem 1.45rem;
+    gap: 0.36rem;
+  }
+
+  .xp.xp--studio small {
+    margin-bottom: 0.2rem;
+  }
+
+  .xp.xp--studio h3 {
+    font-size: clamp(1.85rem, 7.2vw, 2.35rem);
+    line-height: 1.22;
+    max-width: 12ch;
+  }
+
+  html[dir="ltr"] .xp.xp--studio h3 {
+    max-width: 14ch;
+    line-height: 1.14;
+  }
+
+  .xp.xp--studio p {
+    max-width: 30ch;
+    font-size: clamp(0.92rem, 3.6vw, 1rem);
+  }
+
+  .xp.xp--studio .xp-cta {
+    margin-top: 0.9rem;
+    width: auto;
+    max-width: 100%;
+  }
+
+  /* Portrait photo on top — full-bleed, not a side strip */
+  .xp--coach,
+  .xp--live {
+    grid-template-columns: 1fr;
+    grid-template-rows: auto auto;
+    min-height: 0;
+    border-radius: clamp(24px, 6vw, 32px);
+  }
+
+  .xp--coach .xp-photo,
+  .xp--live .xp-photo,
+  html[dir="rtl"] .xp--coach .xp-photo,
+  html[dir="rtl"] .xp--live .xp-photo,
+  html[dir="ltr"] .xp--coach .xp-photo,
+  html[dir="ltr"] .xp--live .xp-photo {
+    order: -1;
+    width: 100%;
+    justify-self: stretch;
+    /* Portrait editorial frame — height leads width */
+    aspect-ratio: 4 / 5;
+    height: auto;
+    max-height: 420px;
+    min-height: 280px;
+    -webkit-mask-image: none;
+    mask-image: none;
+  }
+
+  .xp--coach .xp-photo img,
+  .xp--live .xp-photo img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: 50% 18%;
+    transform: scale(1.02);
+  }
+
+  .xp--coach .xp-copy,
+  .xp--live .xp-copy {
+    justify-content: flex-start;
+    padding: 1.05rem 1.2rem 1.25rem;
+    padding-inline-start: 1.2rem;
+    gap: 0.32rem;
+  }
+
+  .xp--coach h3,
+  .xp--live h3 {
+    max-width: none;
+    font-size: clamp(1.45rem, 5.2vw, 1.75rem);
+  }
+
+  .xp--coach p,
+  .xp--live p {
+    max-width: 34ch;
+  }
+
+  .xp--coach .xp-cta,
+  .xp--live .xp-cta {
+    margin-top: 0.55rem;
+  }
+
+  /* Soft seam: photo dissolves into burgundy copy */
+  .xp--live .xp-photo::after {
+    content: "";
+    position: absolute;
+    inset-inline: 0;
+    bottom: 0;
+    height: 32%;
+    pointer-events: none;
+    background: linear-gradient(
+      to bottom,
+      transparent 0%,
+      color-mix(in srgb, var(--garnet) 55%, transparent) 55%,
+      var(--garnet) 100%
+    );
+  }
+
+  .xp--live .xp-copy {
+    background: var(--garnet);
+    margin-top: -1px;
+  }
+}
+
+@media (max-width: 560px) {
+  .curated {
+    padding-block: clamp(48px, 12vw, 72px);
+  }
+
+  .curated-secondary {
+    gap: 0.95rem;
+  }
+
+  .xp--studio {
+    aspect-ratio: 4 / 5;
+    min-height: 0;
+    max-height: min(540px, 76svh);
+  }
+
+  .xp-media img {
+    object-position: 50% 32%;
+  }
+
+  html[dir="ltr"] .xp-media img {
+    object-position: 48% 30%;
+  }
+
+  .xp--studio .xp-copy {
+    padding: 1.25rem 1.1rem calc(1.3rem + env(safe-area-inset-bottom, 0px));
+  }
+
+  .xp.xp--studio h3 {
+    font-size: clamp(1.75rem, 7.8vw, 2.15rem);
+  }
+
+  .xp--coach .xp-photo,
+  .xp--live .xp-photo {
+    width: 100%;
+    aspect-ratio: 4 / 5;
+    min-height: 260px;
+    max-height: 380px;
+  }
+
+  .xp--coach .xp-photo img {
+    object-position: 55% 16%;
+  }
+
+  .xp--live .xp-photo img {
+    object-position: 48% 14%;
+  }
+
+  .xp--coach .xp-copy,
+  .xp--live .xp-copy {
+    padding: 0.95rem 1.15rem 1.2rem;
+  }
+
+  .xp-cta {
+    min-height: 46px;
+    font-size: 0.86rem;
+    margin-top: 0.45rem;
+    padding: 0.6rem 1.1rem;
+  }
+
+  .xp.xp--studio .xp-cta {
+    min-height: 48px;
+    margin-top: 0.85rem;
+    padding: 0.65rem 1.15rem;
+  }
+}
+
+@media (max-width: 360px) {
+  .xp--studio {
+    max-height: min(480px, 78svh);
+  }
+
+  .xp.xp--studio h3 {
+    font-size: 1.65rem;
+  }
+
+  .xp--coach .xp-photo,
+  .xp--live .xp-photo {
+    min-height: 220px;
+    max-height: 300px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .js-motion .curated-head,
+  .js-motion .xp,
+  .js-motion .xp--studio,
+  .js-motion .xp--studio .xp-media img,
+  .js-motion .xp--studio .xp-copy > * {
+    opacity: 1;
+
+
+/* Kajabi: ensure links inherit */
+a.xp { color: inherit; text-decoration: none; }
+

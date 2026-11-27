@@ -1,0 +1,46 @@
+/* Seham Latino — rhythm-2 GSAP ownership (desktop fine pointer only) */
+
+@media (min-width: 761px) {
+  html.sm-gsap-pilot.js-motion .academy .academy-display,
+  html.sm-gsap-pilot.js-motion .academy .academy-lead,
+  html.sm-gsap-pilot.js-motion .academy .sm-academy-copy > *,
+  html.sm-gsap-pilot.js-motion .academy .academy-flagship,
+  html.sm-gsap-pilot.js-motion .academy .academy-upcoming-heading,
+  html.sm-gsap-pilot.js-motion .academy .academy-soon,
+  html.sm-gsap-pilot .about-portrait.sm-about-pilot .ap-title,
+  html.sm-gsap-pilot .about-portrait.sm-about-pilot .ap-bio,
+  html.sm-gsap-pilot .about-portrait.sm-about-pilot .ap-photo,
+  html.sm-gsap-pilot.js-motion .sm-choreo-claim.reveal-line {
+    transition: none !important;
+  }
+}
+
+/* Fallback: never leave choreo targets hidden when GSAP is off */
+html.sm-gsap-fallback.js-motion .academy,
+html.sm-gsap-fallback.js-motion .curated {
+  /* is-in / is-visible applied via JS */
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html.sm-gsap-pilot .hero-enter,
+  html.sm-gsap-pilot .academy-display,
+  html.sm-gsap-pilot .academy-lead,
+  html.sm-gsap-pilot .sm-academy-copy > *,
+  html.sm-gsap-pilot .academy-flagship,
+  html.sm-gsap-pilot .academy-soon,
+  html.sm-gsap-pilot .freedom-portrait-img,
+  html.sm-gsap-pilot .freedom-manifesto,
+  html.sm-gsap-pilot .freedom-voices,
+  html.sm-gsap-pilot .ap-photo,
+  html.sm-gsap-pilot .ap-title,
+  html.sm-gsap-pilot .ap-bio,
+  html.sm-gsap-pilot .curated-head,
+  html.sm-gsap-pilot .xp,
+  html.sm-gsap-pilot .sg-photo,
+  html.sm-gsap-pilot .sg-copy > *,
+  html.sm-gsap-pilot .final-cta h2,
+  html.sm-gsap-pilot .final-cta .cta-actions {
+    opacity: 1 !important;
+    transform: none !important;
+  }
+}
