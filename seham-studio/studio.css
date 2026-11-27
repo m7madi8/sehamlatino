@@ -60,9 +60,9 @@
   --shadow-whisper: 0 6px 20px color-mix(in srgb, var(--deep) 5%, transparent);
 
   /* Homepage hero copy — warm off-white, not pure #fff */
-  --hero-heading: #fff8ef;
-  --hero-description: #eaddd3;
-  --hero-secondary: #d8c7bc;
+  --hero-heading: #f0e8d8;
+  --hero-description: #f0e8d8;
+  --hero-secondary: #f0e8d8;
   --hero-cta-bg: #faf5ef;
   --hero-cta-text: #581427;
 }
@@ -1738,7 +1738,7 @@ html[dir="ltr"] .hero-stage .hero-still {
 }
 
 .hero-content h1 em {
-  color: color-mix(in srgb, var(--hero-heading) 72%, var(--rose));
+  color: var(--hero-heading);
 }
 
 .hero-content > p {
@@ -7578,7 +7578,7 @@ html[dir="ltr"] .benefit-strip span:not(:last-child) {
   }
 
   .hero-content h1 em {
-    color: color-mix(in srgb, var(--hero-heading) 72%, var(--rose));
+    color: var(--hero-heading);
   }
 
   html[dir="ltr"] .hero-content h1 em {
