@@ -1,0 +1,262 @@
+Act as a world-class digital art director, senior creative frontend developer, and Awwwards-level UI/UX designer.
+
+Redesign the portrait composition within the existing “About Seham” section, specifically for large desktop screens.
+
+The objective is not to decorate the existing image, but to transform its entire visual presentation into a refined, sculptural, feminine editorial composition that feels intentionally art-directed rather than AI-generated or template-based.
+
+## 01. Creative Direction
+
+Follow a visual direction inspired by:
+
+- Luxury fashion editorials.
+- Contemporary dance photography.
+- Sculptural minimalism.
+- Romantic European art direction.
+- Premium feminine brand identities.
+- Contemporary editorial website design.
+
+The result must communicate elegance, femininity, confidence, movement, and artistic expression.
+
+Achieve visual sophistication through composition, proportions, negative space, and subtle detailing rather than excessive decorative elements.
+
+## 02. Analyze and Correct the Existing Composition
+
+Before implementing changes, inspect the existing section structure, CSS, responsive behavior, image masking, SVG elements, and animation logic.
+
+Address the following issues:
+
+- The existing organic image container feels oversized and visually generic.
+- The burgundy outline appears fragmented and disconnected.
+- The burgundy background shape is too visually heavy.
+- The relationship between the photograph and surrounding decorative elements lacks intentionality.
+- The current image silhouette feels closer to a standard organic UI mask than a premium artistic composition.
+- The image dominates the section without sufficient visual refinement.
+- The portrait and typography do not feel like parts of one cohesive editorial composition.
+
+Do not simply modify the border radius of the existing container. Reconsider the entire portrait presentation.
+
+## 03. Reconstruct the Image Composition
+
+Create a custom, asymmetric, vertically oriented sculptural silhouette for the portrait.
+
+The silhouette should feel inspired by the natural movement of fabric and the fluid gestures of contemporary dance.
+
+Design requirements:
+
+- Beautifully controlled, flowing curves.
+- A sophisticated asymmetric silhouette.
+- A refined balance between soft curvature and architectural structure.
+- A slightly elongated vertical proportion.
+- Smooth, uninterrupted contour transitions.
+- No exaggerated blob-like geometry.
+- No generic oval or circular container.
+- No random decorative curves.
+
+Use a custom SVG clipPath, carefully designed CSS mask, or equivalent responsive masking technique.
+
+The geometry must feel handcrafted and deliberate, not generated from arbitrary border-radius values.
+
+The portrait should remain the unmistakable hero of the composition.
+
+## 04. Image Layering and Depth
+
+Build a restrained three-layer visual composition:
+
+**Layer 1 — Sculptural Foundation**
+
+Introduce a subtle burgundy shape behind the image that follows the artistic direction of the portrait silhouette.
+
+This secondary shape should:
+
+- Be visible only in selected, intentional areas.
+- Create subtle visual depth.
+- Complement the portrait without competing with it.
+- Use the existing brand burgundy palette.
+- Feel like a natural continuation of the photograph.
+
+Avoid large, heavy, exposed burgundy surfaces.
+
+**Layer 2 — Main Portrait**
+
+Preserve the original photograph.
+
+- Do not modify Seham's facial features.
+- Do not regenerate or retouch the image.
+- Do not change its original colors.
+- Do not introduce artificial filters.
+- Do not distort the image.
+- Preserve natural body proportions.
+- Maintain a carefully controlled crop.
+- Keep the face and upper body comfortably positioned within the composition.
+
+**Layer 3 — Signature Contour**
+
+Introduce one exceptionally delicate burgundy contour line, only if it genuinely improves the composition.
+
+The line should behave like a continuous artistic gesture inspired by dance movement.
+
+- Approximately 1px in visual weight.
+- Elegant and restrained.
+- Intentionally offset from selected parts of the image silhouette.
+- Never randomly interrupted.
+- Never resemble a standard image border.
+- Never cross the subject's face or body.
+- Never create unnecessary visual complexity.
+
+If the contour does not improve the final composition, remove it entirely.
+
+## 05. Large-Screen Composition
+
+Focus primarily on desktop viewports from 1280px to 2560px.
+
+Rebalance the relationship between the portrait and the existing Arabic typography.
+
+The image should feel generous and prominent without occupying an excessive amount of the viewport.
+
+Use the following values as starting points, not rigid dimensions:
+
+- Portrait composition width: approximately 500–650px.
+- Portrait composition height: approximately 580–700px.
+- Content-to-image gap: approximately 80–140px.
+- Main section maximum width: approximately 1440–1520px.
+- Generous, responsive outer margins.
+
+Use fluid sizing with clamp() where appropriate.
+
+Ensure that on ultrawide monitors, the composition remains intentionally contained and does not stretch indefinitely.
+
+The portrait and text should feel optically balanced rather than mechanically centered.
+
+Maintain generous negative space around the image.
+
+## 06. Creative Visual Signature
+
+Create a subtle visual signature unique to Seham Latino.
+
+The image presentation should abstractly reference:
+
+- The movement of a dancer.
+- The fluidity of fabric.
+- Feminine confidence.
+- Graceful physical expression.
+
+Translate these concepts into the silhouette and layering rather than literal illustrations or icons.
+
+Do not add flowers, butterflies, stars, decorative circles, floating cards, additional typography, or unrelated graphic elements.
+
+The artistic concept must be expressed through the geometry itself.
+
+## 07. Premium Motion Design
+
+Introduce subtle, sophisticated motion using the project's existing animation stack.
+
+On initial viewport entry:
+
+- Reveal the portrait through a controlled, elegant mask animation.
+- Apply a subtle vertical movement of approximately 15–25px.
+- Animate the secondary burgundy layer with a slight delay.
+- Reveal the contour line progressively, if retained.
+- Use refined easing and natural timing.
+
+During scrolling:
+
+- Optional extremely subtle parallax within the image container.
+- Maximum movement of approximately 12–20px.
+- Preserve image coverage throughout the animation.
+- Avoid continuous morphing of the silhouette.
+- Avoid aggressive scaling or rotation.
+- Avoid exaggerated reveal effects.
+
+The animation should feel like a quiet artistic gesture, not a demonstration of frontend technology.
+
+Maintain smooth scrolling and respect prefers-reduced-motion.
+
+## 08. Technical Implementation
+
+- Reuse the existing project architecture and dependencies.
+- Do not introduce unnecessary animation libraries.
+- Use responsive SVG geometry with correctly configured viewBox coordinates where necessary.
+- Prevent clipping of decorative contours.
+- Ensure all visual layers remain correctly aligned during viewport resizing.
+- Prevent horizontal overflow.
+- Avoid expensive animated filters and excessive GPU layers.
+- Avoid layout shifts.
+- Do not interfere with existing smooth-scroll behavior.
+- Verify compatibility with Chrome, Safari, Firefox, and Edge.
+- Maintain excellent rendering performance.
+
+## 09. Responsive Preservation
+
+This redesign is primarily intended for large desktop screens.
+
+Test specifically at:
+
+- 1280 × 720
+- 1440 × 900
+- 1920 × 1080
+- 2560 × 1440
+
+Preserve the existing mobile and tablet layouts unless a minor technical adjustment is necessary to prevent a regression.
+
+Do not apply oversized desktop proportions to smaller screens.
+
+## 10. Strict Preservation Rules
+
+Do not change:
+
+- The existing Arabic or English textual content.
+- The current typography or font families.
+- The original portrait photograph.
+- The established brand color palette.
+- The overall section background.
+- The website header or footer.
+- Other website sections.
+- Existing mobile navigation.
+- Existing functionality.
+
+The scope is the portrait composition, its visual layers, its proportions, and its relationship with the adjacent content.
+
+## 11. Anti-Generic Design Rules
+
+The final result must not resemble:
+
+- A Canva template.
+- An AI-generated landing page.
+- A generic wellness website.
+- A standard rounded image card.
+- A decorative blob-based layout.
+- A common portfolio template.
+- An overdesigned experimental interface.
+
+No glassmorphism.
+No gradients.
+No drop shadows.
+No additional cards.
+No unnecessary visual effects.
+
+Prioritize timeless design over temporary UI trends.
+
+## 12. Final Quality Review
+
+After implementation, critically evaluate the result as a luxury brand art director.
+
+Check:
+
+- Sculptural silhouette quality.
+- Visual hierarchy.
+- Optical balance.
+- Portrait framing.
+- Negative space.
+- Brand consistency.
+- Feminine elegance.
+- Originality.
+- Responsive behavior.
+- Animation smoothness.
+
+If the result still feels generic, excessively decorative, or template-based, refine the composition again before considering the task complete.
+
+The final section should look like a bespoke digital editorial commissioned for a premium international dance academy.
+
+**Design standard: Awwwards-caliber art direction, achieved through restraint, precision, and originality.**
+
+Implement the redesign directly in the existing codebase. Do not simply provide recommendations.
