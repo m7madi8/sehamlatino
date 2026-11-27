@@ -58,6 +58,13 @@
   --radius-control: 10px;
   --shadow-soft: 0 12px 36px color-mix(in srgb, var(--deep) 7%, transparent);
   --shadow-whisper: 0 6px 20px color-mix(in srgb, var(--deep) 5%, transparent);
+
+  /* Homepage hero copy — warm off-white, not pure #fff */
+  --hero-heading: #fff8ef;
+  --hero-description: #eaddd3;
+  --hero-secondary: #d8c7bc;
+  --hero-cta-bg: #faf5ef;
+  --hero-cta-text: #581427;
 }
 
 *,
@@ -1624,7 +1631,7 @@ html[dir="ltr"] .menu-cta {
   min-height: 100svh;
   display: grid;
   align-items: end;
-  color: #fff;
+  color: var(--hero-heading);
   overflow: hidden;
   background: var(--deep);
 }
@@ -1726,26 +1733,27 @@ html[dir="ltr"] .hero-stage .hero-still {
 
 .hero-content h1 {
   max-width: 14ch;
+  color: var(--hero-heading);
   text-shadow: 0 1px 24px color-mix(in srgb, var(--deep) 35%, transparent);
 }
 
 .hero-content h1 em {
-  color: color-mix(in srgb, #fff 72%, var(--rose));
+  color: color-mix(in srgb, var(--hero-heading) 72%, var(--rose));
 }
 
 .hero-content > p {
   max-width: 32ch;
-  color: color-mix(in srgb, #fff 86%, transparent);
+  color: var(--hero-description);
   font-size: clamp(1.02rem, 1.35vw, 1.18rem);
   line-height: 1.65;
 }
 
 .hero-content .eyebrow {
-  color: color-mix(in srgb, #fff 78%, var(--rose));
+  color: var(--hero-secondary);
 }
 
 .hero-content .eyebrow::before {
-  background: color-mix(in srgb, #fff 70%, transparent);
+  background: color-mix(in srgb, var(--hero-secondary) 78%, transparent);
 }
 
 .hero-actions {
@@ -1757,9 +1765,9 @@ html[dir="ltr"] .hero-stage .hero-still {
 }
 
 .hero-actions .btn {
-  background: #fff;
-  color: var(--garnet);
-  border-color: #fff;
+  background: var(--hero-cta-bg);
+  color: var(--hero-cta-text);
+  border-color: var(--hero-cta-bg);
 }
 
 .hero-actions .btn:hover {
@@ -1769,8 +1777,8 @@ html[dir="ltr"] .hero-stage .hero-still {
 }
 
 .hero-actions .text-link {
-  color: #fff;
-  border-bottom-color: color-mix(in srgb, #fff 55%, transparent);
+  color: var(--hero-secondary);
+  border-bottom-color: color-mix(in srgb, var(--hero-secondary) 55%, transparent);
 }
 
 .hero-meta {
@@ -1779,11 +1787,11 @@ html[dir="ltr"] .hero-stage .hero-still {
   gap: 1rem;
   margin-top: clamp(2rem, 6vw, 4rem);
   padding-top: 1rem;
-  border-top: 1px solid color-mix(in srgb, #fff 22%, transparent);
+  border-top: 1px solid color-mix(in srgb, var(--hero-secondary) 35%, transparent);
   font-size: 0.72rem;
   letter-spacing: 0.08em;
   text-transform: uppercase;
-  color: color-mix(in srgb, #fff 65%, transparent);
+  color: color-mix(in srgb, var(--hero-secondary) 88%, transparent);
   max-width: 520px;
 }
 
@@ -7434,7 +7442,7 @@ html[dir="ltr"] .benefit-strip span:not(:last-child) {
     max-height: 100svh;
     display: grid;
     align-items: end;
-    color: var(--ivory);
+    color: var(--hero-heading);
   }
 
   .home-hero[data-cinematic-hero] {
@@ -7545,11 +7553,11 @@ html[dir="ltr"] .benefit-strip span:not(:last-child) {
 
   .hero-content .eyebrow {
     margin-bottom: 0.7rem;
-    color: color-mix(in srgb, var(--ivory) 82%, var(--rose));
+    color: var(--hero-secondary);
   }
 
   .hero-content .eyebrow::before {
-    background: color-mix(in srgb, var(--ivory) 72%, transparent);
+    background: color-mix(in srgb, var(--hero-secondary) 78%, transparent);
   }
 
   .hero-content h1 {
@@ -7570,7 +7578,7 @@ html[dir="ltr"] .benefit-strip span:not(:last-child) {
   }
 
   .hero-content h1 em {
-    color: color-mix(in srgb, var(--ivory) 78%, var(--rose));
+    color: color-mix(in srgb, var(--hero-heading) 72%, var(--rose));
   }
 
   html[dir="ltr"] .hero-content h1 em {
@@ -7582,7 +7590,7 @@ html[dir="ltr"] .benefit-strip span:not(:last-child) {
     margin-bottom: 1.4rem;
     font-size: 0.98rem;
     line-height: 1.55;
-    color: color-mix(in srgb, var(--ivory) 86%, transparent);
+    color: var(--hero-description);
   }
 
   html[dir="ltr"] .hero-content > p:not(.eyebrow) {
@@ -7602,16 +7610,16 @@ html[dir="ltr"] .benefit-strip span:not(:last-child) {
     min-height: 50px;
     min-width: 11.5rem;
     padding-inline: 1.45rem;
-    background: var(--ivory);
-    color: var(--garnet);
-    border-color: var(--ivory);
+    background: var(--hero-cta-bg);
+    color: var(--hero-cta-text);
+    border-color: var(--hero-cta-bg);
     box-shadow: 0 10px 28px color-mix(in srgb, #2b0010 28%, transparent);
   }
 
   .hero-actions .btn:hover,
   .hero-actions .btn:focus-visible {
-    background: #fff;
-    border-color: #fff;
+    background: var(--blush);
+    border-color: var(--blush);
     color: var(--deep);
   }
 
