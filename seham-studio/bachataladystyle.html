@@ -24,7 +24,35 @@ const BUNNY = {
   allowUnsignedPreview: true
 };
 
-const ar=['البداية والإيقاع','الخطوات الأساسية','حركة الوركين','توازن الجسم','حركة الذراعين','الدوران بثقة','التعبير والأنوثة','تنسيق الحركات','تسلسل الباتشاتا','الرقصة الكاملة'],en=['The first rhythm','Basic steps','Hip movement','Balance & posture','Arm styling','Turns with confidence','Expression & femininity','Movement coordination','Bachata sequence','The full choreography'],mins=[18,22,20,19,21,23,20,22,21,24];
+const ar = [
+  'ابني أساسك',
+  'تقنيات حركة الأكتاف، اليدين، الأصابع والستايل',
+  'اربطي الحركة',
+  'تعرّفي على حركة خصرك',
+  'Footwork',
+  'ارجعي للجذور',
+  'التنسيق بين الجزء العلوي والسفلي من الجسم',
+  'الموجات، والتعبير من خلال الجسد',
+  'دمج حركات وخلق رقصة جديدة',
+  'جوهرة الكورس – تحركي بالحياة بطريقة مختلفة'
+];
+
+const en = [
+  'Build Your Foundation',
+  'Shoulder, Arm & Finger Styling Techniques',
+  'Connect Your Movements',
+  'Discover Your Hip Movement',
+  'Footwork',
+  'Back to the Roots',
+  'Upper & Lower Body Coordination',
+  'Body Waves & Expression Through Movement',
+  'Combine Movements & Create a New Dance',
+  'The Jewel of the Course – Move Through Life Differently'
+];
+
+const mins = [
+  18, 22, 20, 19, 21, 23, 20, 22, 21, 24
+];
 const copy={ar:{skip:'انتقلي للمحتوى',library:'مكتبتي',studio:'استوديو التعلم',eyebrow:'أكاديمية سهام لاتينو / مساحتك الخاصة',course:'باتشاتا ليدي ستايل',subtitle:'للمبتدئات · 10 دروس · 3.5 ساعات',progress:'رحلتك حتى الآن',lessons:'دروس الدورة',sequence:'خطوة بخطوة، على إيقاعك الخاص.',foot:'كل درس هو مساحة جديدة للحركة.',demo:'معاينة',prev:'الدرس السابق',next:'الدرس التالي',noteTitle:'مساحتك، إيقاعك.',noteSub:'احتفظي بملاحظة صغيرة من كل درس.',noteAction:'ملاحظاتي +',saved:'تحفظ الملاحظات على هذا الجهاز فقط.',notice:'إعداد تجريبي: عناوين الدروس ومددها افتراضية. التشغيل عبر Bunny Stream بعد ضبط المعرفات والصلاحيات.'},en:{skip:'Skip to content',library:'My library',studio:'Learning studio',eyebrow:'SEHAM LATINO ACADEMY / YOUR SPACE',course:'Bachata Lady Style',subtitle:'Beginner · 10 lessons · 3.5 hours',progress:'Your journey so far',lessons:'Course lessons',sequence:'One step at a time, at your own rhythm.',foot:'Each lesson is a new space to move.',demo:'Demo video',prev:'Previous lesson',next:'Next lesson',noteTitle:'Your space, your rhythm.',noteSub:'Keep a little note from each lesson.',noteAction:'My notes +',saved:'Notes are saved on this device only.',notice:'Demo configuration: sample titles and durations. Playback uses Bunny Stream once configured.'}};
 Object.assign(copy.ar,{practice:'أدوات التدريب',speed:'السرعة',repeat:'تكرار'});Object.assign(copy.en,{practice:'Practice tools',speed:'Speed',repeat:'Repeat'});
 const $=id=>document.getElementById(id), check='<svg viewBox="0 0 24 24"><path d="m5 12 4 4L19 6"/></svg>',triangle='<svg viewBox="0 0 24 24"><path d="m9 5 12 7-12 7z"/></svg>';let storage={};try{storage=JSON.parse(localStorage.getItem('sl-learning-demo-v1')||'{}')||{}}catch{}let lang=storage.lang==='en'?'en':'ar', current=Number.isInteger(storage.current)&&storage.current>=0&&storage.current<10?storage.current:0, done=new Set(Array.isArray(storage.done)?storage.done.filter(n=>Number.isInteger(n)&&n>=0&&n<10):[]), notes=storage.notes||{}, times=storage.times||{};const poster=$('video'), frame=$('bunnyFrame'); let requestVersion=0;function save(){try{localStorage.setItem('sl-learning-demo-v1',JSON.stringify({lang,current,done:[...done],notes,times}))}catch{}}function render(){document.documentElement.lang=lang;document.documentElement.dir=lang==='ar'?'rtl':'ltr';document.querySelectorAll('[data-i]').forEach(el=>el.textContent=copy[lang][el.dataset.i]);$('language').textContent=lang==='ar'?'EN':'عربي';$('language').setAttribute('aria-label',lang==='ar'?'English':'العربية');$('play').setAttribute('aria-label',lang==='ar'?'تشغيل الفيديو':'Play video');let titles=lang==='ar'?ar:en;$('list').replaceChildren();titles.forEach((t,i)=>{if([0,3,7].includes(i)){let chapter=document.createElement('div');chapter.className='chapter';chapter.textContent=(lang==='ar'?{0:'01 / الأساس',3:'02 / الأسلوب',7:'03 / الرقصة'}:{0:'01 / Foundations',3:'02 / Expression',7:'03 / Choreography'})[i];$('list').append(chapter)}let b=document.createElement('button');b.className='lesson'+(i===current?' active':'')+(done.has(i)?' done':'');b.setAttribute('aria-current',i===current?'true':'false');b.innerHTML=`<span class="num">${String(i+1).padStart(2,'0')}</span><span><span class="lesson-title">${t}</span><span class="lesson-meta">${mins[i]} ${lang==='ar'?'دقيقة':'min'}${done.has(i)?(lang==='ar'?' · مكتمل':' · Complete'):''}</span></span><span class="state">${done.has(i)?check:triangle}</span>`;b.onclick=()=>select(i);$('list').append(b)});$('title').textContent=titles[current];$('lessonNo').textContent=lang==='ar'?`الدرس ${String(current+1).padStart(2,'0')} من 10`:`LESSON ${String(current+1).padStart(2,'0')} / 10`;$('duration').textContent=mins[current]+(lang==='ar'?' دقيقة · مدة تقديرية':' min · sample duration');$('desc').textContent=lang==='ar'?'خذي وقتك في التعلم، وكرري الحركات بالسرعة التي تناسبك. يمكنك العودة إلى هذا الدرس في أي وقت.':'Take your time, repeat the movements at your own pace, and return to this lesson whenever you need.';$('completeText').textContent=done.has(current)?(lang==='ar'?'تم إكمال الدرس':'Lesson completed'):(lang==='ar'?'تحديد كمكتمل':'Mark as complete');$('complete').classList.toggle('is-done',done.has(current));$('complete').setAttribute('aria-pressed',done.has(current));$('steps').replaceChildren(...ar.map((_,i)=>{let x=document.createElement('i');x.className=done.has(i)?'finished':i===current?'current':'';return x}));$('focusMode').textContent=lang==='ar'?(document.body.classList.contains('focus-mode')?'إنهاء التركيز':'وضع التركيز'):(document.body.classList.contains('focus-mode')?'Exit focus':'Focus mode');$('percent').textContent=done.size*10+'%';$('bar').style.width=done.size*10+'%';document.querySelector('.track').setAttribute('aria-valuenow',done.size*10);$('count').textContent=lang==='ar'?`${done.size} من 10 دروس مكتملة`:`${done.size} of 10 lessons completed`;$('prev').disabled=current===0;$('next').disabled=current===9;$('notes').value=notes[current]||'';}

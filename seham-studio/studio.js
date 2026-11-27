@@ -1020,7 +1020,10 @@
   const video = hero.querySelector(".hero-cinema-video");
   const still = hero.querySelector(".hero-still");
   const stage = hero.querySelector(".hero-stage");
-  if (!video) return;
+  if (!video) {
+    hero.classList.add("is-cinema-ready", "is-cinema-entered");
+    return;
+  }
 
   const reduceMotion = matchMedia("(prefers-reduced-motion: reduce)").matches;
   const saveData =

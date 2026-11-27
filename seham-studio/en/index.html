@@ -88,24 +88,33 @@
   <!-- 1. Attention + desire seed -->
   <section class="home-hero" aria-label="Introduction" data-cinematic-hero>
     <div class="hero-stage">
-      <img class="hero-still" alt="Seham Latino in a dance pose" width="1679" height="937" decoding="async" fetchpriority="high" data-src="../img/home-hero-desktop.jpg"/>
-      <video
-        class="hero-cinema-video"
-        muted
-        loop
-        playsinline
-        preload="none"
-        aria-hidden="true"
-        tabindex="-1"
-        disablepictureinpicture
-        disableremoteplayback
-        data-src="../assets/video/home-hero-mobile.mp4"
-        data-poster="../assets/video/home-hero-poster.jpg"
-      ></video>
-      <noscript><img class="hero-still" alt="Seham Latino in a dance pose" src="../img/home-hero-desktop.jpg" width="1679" height="937"/></noscript>
+      <picture class="hero-picture">
+        <source media="(max-width: 760px)" srcset="../img/hero-phone.png" />
+        <img
+          class="hero-still"
+          src="../img/hero-en.jpeg"
+          alt="Seham Latino in a dance pose"
+          width="1679"
+          height="937"
+          decoding="async"
+          fetchpriority="high"
+          data-src="../img/hero-en.jpeg"
+        />
+      </picture>
+      <noscript>
+        <picture class="hero-picture">
+          <source media="(max-width: 760px)" srcset="../img/hero-phone.png" />
+          <img
+            class="hero-still"
+            alt="Seham Latino in a dance pose"
+            src="../img/hero-en.jpeg"
+            width="1679"
+            height="937"
+          />
+        </picture>
+      </noscript>
     </div>
     <div class="hero-content">
-      <p class="eyebrow hero-enter hero-enter--1">Seham Latino</p>
       <h1 class="hero-enter hero-enter--2">Be yourself.<br/><em>In every move.</em></h1>
       <p class="hero-enter hero-enter--3">Bachata Lady Style from home — solo, at your pace, with Seham Atallah.</p>
       <div class="hero-actions hero-enter hero-enter--4">
@@ -190,56 +199,78 @@
         loading="lazy"
       />
     </div>
+  
     <div class="wrap freedom-inner reveal-line">
       <header class="freedom-manifesto">
         <h2 id="freedom-title" class="freedom-title">
           <span class="freedom-title-quiet">You do not need to be a dancer.</span>
           <span class="freedom-title-lead">Only room to move.</span>
         </h2>
-        <p class="freedom-support">Pause, repeat, and grow from your own space — one lesson at a time.</p>
+        <p class="freedom-support">
+          Pause, repeat, and grow from your own space — one lesson at a time.
+        </p>
       </header>
-
+  
       <div class="freedom-voices" data-freedom-voices tabindex="0">
         <div class="freedom-stage">
+  
           <button type="button" class="freedom-nav freedom-nav--prev" data-freedom-prev aria-label="Previous testimonial">
             <svg class="freedom-nav-icon" viewBox="0 0 24 24" aria-hidden="true" fill="none">
               <path d="M14.5 6.5 9 12l5.5 5.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
             </svg>
           </button>
-
+  
           <div class="freedom-quote-frame" aria-live="polite" aria-atomic="true">
-            <span class="freedom-mark" aria-hidden="true">“</span>
             <div class="freedom-quote-track" data-freedom-track>
+  
               <blockquote class="freedom-quote is-active" data-freedom-quote>
                 <p>“Dance helped me put myself first, feel closer to myself, and give myself space to feel happy.”</p>
-                <footer class="freedom-attr">Student message, published with permission.</footer>
+                <footer class="freedom-attr">
+                  Student message, published with permission.
+                </footer>
               </blockquote>
+  
               <blockquote class="freedom-quote" data-freedom-quote hidden>
                 <p>“Every lesson brings something new — and a conversation that feels like more than movement.”</p>
-                <footer class="freedom-attr">A message from a student of the academy.</footer>
+                <footer class="freedom-attr">
+                  A message from a student of the academy.
+                </footer>
               </blockquote>
+  
               <blockquote class="freedom-quote" data-freedom-quote hidden>
                 <p>“An elegant way to express my soul and my femininity.”</p>
-                <footer class="freedom-attr">A message from a student of the academy.</footer>
+                <footer class="freedom-attr">
+                  A message from a student of the academy.
+                </footer>
               </blockquote>
+  
             </div>
           </div>
-
+  
           <button type="button" class="freedom-nav freedom-nav--next" data-freedom-next aria-label="Next testimonial">
             <svg class="freedom-nav-icon" viewBox="0 0 24 24" aria-hidden="true" fill="none">
               <path d="M9.5 6.5 15 12l-5.5 5.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
             </svg>
           </button>
+  
         </div>
-
+  
         <div class="freedom-meter">
-          <p class="freedom-index" data-freedom-index aria-hidden="true"><span>01</span> / <span>03</span></p>
+          <p class="freedom-index" data-freedom-index aria-hidden="true">
+            <span>01</span> / <span>03</span>
+          </p>
+  
           <div class="freedom-dots" role="tablist" aria-label="Choose a testimonial">
+  
             <button type="button" class="freedom-dot is-active" role="tab" aria-selected="true" aria-label="Testimonial 1 of 3" data-freedom-dot="0"></button>
+  
             <button type="button" class="freedom-dot" role="tab" aria-selected="false" aria-label="Testimonial 2 of 3" data-freedom-dot="1"></button>
+  
             <button type="button" class="freedom-dot" role="tab" aria-selected="false" aria-label="Testimonial 3 of 3" data-freedom-dot="2"></button>
+  
           </div>
         </div>
+  
       </div>
     </div>
   </section>
@@ -288,7 +319,6 @@
       </div>
 
       <div class="ap-copy">
-        <p class="ap-name">Seham Atallah</p>
         <h2 class="ap-title" id="portrait-title">
           <span class="ap-line"><span class="ap-line-in">I am Seham.</span></span>
           <span class="ap-line ap-line--soft"><span class="ap-line-in">Dance is my language.</span></span>
