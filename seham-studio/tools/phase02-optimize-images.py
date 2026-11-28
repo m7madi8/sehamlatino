@@ -109,7 +109,7 @@ def dedupe_footer_silk_urls() -> None:
     pattern = re.compile(
         r"url\('data:image/webp;base64,[^']+'\)",
     )
-    replacement = 'url("img/sl-footer-silk.webp")'
+    replacement = 'url("img/footer/sl-footer-silk.webp")'
     text2, n = pattern.subn(replacement, text)
     css_path.write_text(text2, encoding="utf-8")
     after = len(text2)

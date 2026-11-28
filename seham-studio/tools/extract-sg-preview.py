@@ -22,7 +22,7 @@ for name in ["preview-ar.html", "preview-en.html"]:
             silk_path.write_text(svg, encoding="utf-8")
         html = re.sub(
             r'(<div class="sg-photo"><img )src="data:image/jpeg;base64,[^"]+"',
-            r'\1src="img/gift-cover.jpg"',
+            r'\1src="img/content/gift-cover.jpg"',
             html,
         )
         html = re.sub(

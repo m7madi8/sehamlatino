@@ -18,8 +18,8 @@ for root in ROOTS:
         t = p.read_text(encoding="utf-8")
         n = re.sub(r'studio\.css\?v=[^"\']+', CACHE, t)
         n = re.sub(r'studio\.css"', f'{CACHE.split("?")[0]}?v=sass-footer-exact"', n)
-        if "studio.css?v=" not in n and 'href="studio.css"' in n:
-            n = n.replace('href="studio.css"', f'href="{CACHE}"')
+        if "studio.css?v=" not in n and 'href="css/studio.css"' in n:
+            n = n.replace('href="css/studio.css"', f'href="{CACHE}"')
         if n != t:
             p.write_text(n, encoding="utf-8", newline="\n")
 

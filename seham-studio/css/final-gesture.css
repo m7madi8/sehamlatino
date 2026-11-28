@@ -1,0 +1,79 @@
+/* Final Gesture — load after studio.css and editorial-story.css. Homepage only. */
+.closing-canvas {
+  --gesture-width: min(44vw, 760px);
+  --gesture-height: clamp(90px, 13vw, 210px);
+  --gesture-gap: clamp(20px, 3vw, 52px);
+  position: relative;
+  isolation: isolate;
+}
+
+/* Disable only the previous CTA decorations; keep cross-section bridge/hem intact. */
+.closing-canvas .closing-silk img {
+  display: none !important;
+}
+
+html[dir] .closing-canvas .closing-silk::after,
+html[dir] .editorial-story .closing-canvas .closing-silk::after {
+  content: none !important;
+  display: none !important;
+  background: none !important;
+  transform: none !important;
+}
+
+.closing-canvas .final-cta {
+  position: relative;
+  isolation: isolate;
+  padding-top: calc(var(--gesture-height) + var(--gesture-gap));
+}
+
+.closing-canvas .final-cta::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  right: 0;
+  left: auto;
+  width: var(--gesture-width);
+  height: var(--gesture-height);
+  background: url("../assets/silk/cta-final-gesture.webp") right top / contain no-repeat;
+  pointer-events: none;
+  user-select: none;
+  z-index: 0;
+  transform: none;
+}
+
+.closing-canvas .final-cta .cta-stage {
+  position: relative;
+  z-index: 2;
+}
+
+@media (max-width: 1199px) {
+  .closing-canvas {
+    --gesture-width: min(70vw, 620px);
+    --gesture-height: clamp(85px, 23vw, 180px);
+    --gesture-gap: clamp(14px, 3vw, 30px);
+  }
+
+  .closing-canvas .final-cta::before {
+    background-image: url("../assets/silk/cta-final-gesture-mobile.webp");
+  }
+}
+
+@media (max-width: 599px) {
+  .closing-canvas {
+    --gesture-width: 100%;
+    --gesture-height: clamp(90px, 33vw, 196px);
+    --gesture-gap: clamp(12px, 4vw, 22px);
+  }
+}
+
+/* Same physical fabric direction in both languages; no mirrored photography. */
+.editorial-story .closing-canvas .final-cta {
+  padding-top: calc(var(--gesture-height) + var(--gesture-gap));
+}
+
+html[dir="ltr"] .closing-canvas .final-cta::before,
+html[dir="rtl"] .closing-canvas .final-cta::before {
+  right: 0;
+  left: auto;
+  transform: none;
+}

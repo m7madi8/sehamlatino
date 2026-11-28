@@ -36,7 +36,7 @@ def footer_ar(link_prefix: str, asset_prefix: str) -> str:
   <div class="sl-footer__inner">
     <div class="sl-footer__main">
       <div class="sl-footer__brand">
-        <img alt="Seham Latino — Dance, Love, Grow" class="sl-footer__logo" height="150" src="{asset_prefix}img/seham-footer-logo-gold.png" width="243"/>
+        <img alt="Seham Latino — Dance, Love, Grow" class="sl-footer__logo" height="150" src="{asset_prefix}img/brand/seham-footer-logo-gold.png" width="243"/>
         <h2 class="sl-footer__headline">خذي مساحتك.<br/>وارقصي بطريقتك.</h2>
         <a class="sl-footer__mail" dir="ltr" href="mailto:info.sehamlatino@gmail.com">info.sehamlatino@gmail.com</a>
         <div class="sl-footer__social">
@@ -81,7 +81,7 @@ def footer_en(asset_prefix: str) -> str:
   <div class="sl-footer__inner">
     <div class="sl-footer__main">
       <div class="sl-footer__brand">
-        <img alt="Seham Latino — Dance, Love, Grow" class="sl-footer__logo" height="150" src="{asset_prefix}img/seham-footer-logo-gold.png" width="243"/>
+        <img alt="Seham Latino — Dance, Love, Grow" class="sl-footer__logo" height="150" src="{asset_prefix}img/brand/seham-footer-logo-gold.png" width="243"/>
         <h2 class="sl-footer__headline">Take up space.<br/>Dance your way.</h2>
         <a class="sl-footer__mail" href="mailto:info.sehamlatino@gmail.com">info.sehamlatino@gmail.com</a>
         <div class="sl-footer__social">

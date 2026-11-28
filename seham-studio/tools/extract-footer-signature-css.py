@@ -17,7 +17,7 @@ def main() -> None:
     css = m.group(0).split("</style>", 1)[0].strip()
     css = re.sub(
         r"background:url\('data:image/webp;base64,[^']+'\)",
-        "background:url('img/menu-silk-texture.jpg')",
+        "background:url('img/ui/menu-silk-texture.jpg')",
         css,
     )
     OUT.write_text(css + "\n", encoding="utf-8")
