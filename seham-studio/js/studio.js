@@ -1083,172 +1083,202 @@
 })();
 
 (() => {
-  const media = document.querySelector("[data-living-photo]");
-  if (!media) return;
+  const blocks = [...document.querySelectorAll("[data-living-photo]")];
+  if (!blocks.length) return;
 
-  const video = media.querySelector(".academy-flagship-video");
-  if (!video) return;
+  const initLivingPhoto = (media) => {
+    const video = media.querySelector(".academy-flagship-video");
+    if (!video) return;
 
-  const perfDiag = window.__sehamPerfDiag || null;
-  const reduceMotion = matchMedia("(prefers-reduced-motion: reduce)").matches;
-  const saveData =
-    (navigator.connection && navigator.connection.saveData) ||
-    matchMedia("(prefers-reduced-data: reduce)").matches;
-  const coarsePointer = matchMedia("(pointer: coarse)").matches;
-  const narrowView = matchMedia("(max-width: 760px)").matches;
-  const needsGesture = coarsePointer && narrowView && !reduceMotion && !saveData;
-  const lazySrc = video.getAttribute("data-src");
-  const viewPlayRatio = needsGesture ? 0.38 : narrowView ? 0.22 : 0.12;
+    const hasPoster = Boolean(media.querySelector(".academy-flagship-poster"));
+    const eager = media.hasAttribute("data-living-eager") || !hasPoster;
+    const perfDiag = window.__sehamPerfDiag || null;
+    const reduceMotion = matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const saveData =
+      (navigator.connection && navigator.connection.saveData) ||
+      matchMedia("(prefers-reduced-data: reduce)").matches;
+    const coarsePointer = matchMedia("(pointer: coarse)").matches;
+    const narrowView = matchMedia("(max-width: 760px)").matches;
+    const needsGesture = coarsePointer && narrowView && !reduceMotion && !saveData;
+    const lazySrc = video.getAttribute("data-src");
+    const inlineSrc = video.getAttribute("src");
+    const viewPlayRatio = eager
+      ? 0.06
+      : needsGesture
+        ? 0.38
+        : narrowView
+          ? 0.22
+          : 0.12;
 
-  let shouldPlay = false;
-  let userPaused = reduceMotion || saveData || needsGesture;
-  let sourceArmed = false;
-  let playPending = false;
+    let shouldPlay = false;
+    let userPaused = reduceMotion || saveData || needsGesture;
+    let sourceArmed = false;
+    let playPending = false;
 
-  if (reduceMotion || saveData) media.classList.add("is-reduced");
+    if (reduceMotion || saveData) media.classList.add("is-reduced");
 
-  video.removeAttribute("controls");
-  video.controls = false;
-  video.setAttribute("playsinline", "");
-  video.setAttribute("muted", "");
-  video.setAttribute("loop", "");
-  video.setAttribute("disablepictureinpicture", "");
-  video.setAttribute("controlslist", "nodownload nofullscreen noremoteplayback");
-
-  if (lazySrc) {
-    while (video.firstChild) video.removeChild(video.firstChild);
-    video.removeAttribute("src");
-  }
-
-  const revealLive = () => {
-    if (video.readyState >= 2) media.classList.add("is-live");
-  };
-
-  const concealLive = () => {
-    media.classList.remove("is-live");
-  };
-
-  const armSource = () => {
-    if (sourceArmed) return;
-    sourceArmed = true;
-    media.classList.add("is-prep");
-    if (lazySrc) {
-      const source = document.createElement("source");
-      source.src = lazySrc;
-      source.type = "video/mp4";
-      video.appendChild(source);
-    }
-    video.preload = "metadata";
-    try {
-      video.load();
-    } catch (_) {
-      /* ignore */
-    }
-  };
-
-  const tryPlay = async () => {
-    if (playPending) return;
-    if (userPaused || !shouldPlay || document.hidden) return;
-    if (perfDiag && perfDiag.video === false) return;
-    playPending = true;
-    armSource();
-    video.muted = true;
-    video.playsInline = true;
+    video.removeAttribute("controls");
     video.controls = false;
-    try {
-      const playPromise = video.play();
-      if (playPromise && typeof playPromise.then === "function") {
-        await playPromise;
-      }
-    } catch (_) {
-      concealLive();
-    } finally {
-      playPending = false;
+    video.setAttribute("playsinline", "");
+    video.setAttribute("muted", "");
+    video.setAttribute("loop", "");
+    video.setAttribute("disablepictureinpicture", "");
+    video.setAttribute("controlslist", "nodownload nofullscreen noremoteplayback");
+
+    if (lazySrc && !inlineSrc) {
+      while (video.firstChild) video.removeChild(video.firstChild);
+      video.removeAttribute("src");
     }
-  };
 
-  const pauseSoftly = () => {
-    shouldPlay = false;
-    if (!video.paused) video.pause();
-    concealLive();
-  };
+    const revealLive = () => {
+      if (video.readyState >= 2) media.classList.add("is-live");
+    };
 
-  video.addEventListener("loadeddata", revealLive, { once: false });
-  video.addEventListener("playing", revealLive);
-  video.addEventListener("error", () => {
-    concealLive();
-    userPaused = true;
-  });
+    const concealLive = () => {
+      if (!eager) media.classList.remove("is-live");
+    };
 
-  if ("IntersectionObserver" in window) {
-    const prepMargin = narrowView ? "120px 0px 200px 0px" : "280px 0px 360px 0px";
-    const playMargin = narrowView ? "8% 0px 6% 0px" : "10% 0px 8% 0px";
+    const armSource = () => {
+      if (sourceArmed) return;
+      sourceArmed = true;
+      media.classList.add("is-prep");
+      if (lazySrc && !inlineSrc) {
+        const source = document.createElement("source");
+        source.src = lazySrc;
+        source.type = "video/mp4";
+        video.appendChild(source);
+      }
+      video.preload = eager && !saveData ? "auto" : "metadata";
+      try {
+        video.load();
+      } catch (_) {
+        /* ignore */
+      }
+    };
 
-    const prepIo = new IntersectionObserver(
-      (entries) => {
-        if (entries.some((e) => e.isIntersecting)) {
-          armSource();
-          prepIo.disconnect();
+    const tryPlay = async () => {
+      if (playPending) return;
+      if (userPaused || !shouldPlay || document.hidden) return;
+      if (perfDiag && perfDiag.video === false) return;
+      playPending = true;
+      armSource();
+      video.muted = true;
+      video.playsInline = true;
+      video.controls = false;
+      try {
+        const playPromise = video.play();
+        if (playPromise && typeof playPromise.then === "function") {
+          await playPromise;
         }
-      },
-      { threshold: 0, rootMargin: prepMargin }
-    );
-    prepIo.observe(media);
+      } catch (_) {
+        concealLive();
+      } finally {
+        playPending = false;
+      }
+    };
 
-    const playIo = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          shouldPlay = entry.isIntersecting && entry.intersectionRatio >= viewPlayRatio;
-          if (shouldPlay) {
-            tryPlay();
-          } else if (!entry.isIntersecting) {
-            pauseSoftly();
-          }
-        });
-      },
-      { threshold: [0, 0.12, 0.22, 0.38, 0.55], rootMargin: playMargin }
-    );
-    playIo.observe(media);
-  } else {
-    shouldPlay = true;
-    tryPlay();
-  }
+    const pauseSoftly = () => {
+      shouldPlay = false;
+      if (!video.paused) video.pause();
+      concealLive();
+    };
 
-  document.addEventListener("visibilitychange", () => {
-    if (document.hidden) pauseSoftly();
-    else if (shouldPlay) tryPlay();
-  });
+    video.addEventListener("loadeddata", revealLive, { once: false });
+    video.addEventListener("playing", revealLive);
+    video.addEventListener("error", () => {
+      concealLive();
+      userPaused = true;
+    });
 
-  if (needsGesture) {
-    const frame = media.closest(".academy-flagship-frame, .course-hero__media");
-    if (frame) {
-      frame.setAttribute("role", "button");
-      frame.setAttribute("tabindex", "0");
-      frame.style.pointerEvents = "auto";
-      frame.setAttribute(
-        "aria-label",
-        document.documentElement.lang === "en"
-          ? "Play academy video"
-          : "تشغيل فيديو الأكاديمية"
-      );
-      const unlock = () => {
-        userPaused = false;
-        shouldPlay = true;
-        tryPlay();
-      };
-      frame.addEventListener("click", unlock, { once: true });
-      frame.addEventListener(
-        "keydown",
-        (event) => {
-          if (event.key === "Enter" || event.key === " ") {
-            event.preventDefault();
-            unlock();
+    if ("IntersectionObserver" in window) {
+      const prepMargin = eager
+        ? "480px 0px 560px 0px"
+        : narrowView
+          ? "120px 0px 200px 0px"
+          : "280px 0px 360px 0px";
+      const playMargin = eager
+        ? "28% 0px 24% 0px"
+        : narrowView
+          ? "8% 0px 6% 0px"
+          : "10% 0px 8% 0px";
+
+      const prepIo = new IntersectionObserver(
+        (entries) => {
+          if (entries.some((e) => e.isIntersecting)) {
+            armSource();
+            prepIo.disconnect();
           }
         },
-        { once: true }
+        { threshold: 0, rootMargin: prepMargin }
       );
+      prepIo.observe(media);
+
+      const playIo = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((entry) => {
+            const ratioOk = entry.intersectionRatio >= viewPlayRatio;
+            shouldPlay =
+              entry.isIntersecting && (eager ? entry.intersectionRatio > 0.01 : ratioOk);
+            if (shouldPlay) {
+              tryPlay();
+            } else if (!entry.isIntersecting) {
+              pauseSoftly();
+            }
+          });
+        },
+        {
+          threshold: eager ? [0, 0.04, 0.08, 0.12, 0.2] : [0, 0.12, 0.22, 0.38, 0.55],
+          rootMargin: playMargin,
+        }
+      );
+      playIo.observe(media);
+    } else {
+      shouldPlay = true;
+      tryPlay();
     }
-  }
+
+    document.addEventListener("visibilitychange", () => {
+      if (document.hidden) pauseSoftly();
+      else if (shouldPlay) tryPlay();
+    });
+
+    if (eager && !saveData && !reduceMotion) {
+      armSource();
+    }
+
+    if (needsGesture) {
+      const frame = media.closest(".academy-flagship-frame, .course-hero__media");
+      if (frame) {
+        frame.setAttribute("role", "button");
+        frame.setAttribute("tabindex", "0");
+        frame.style.pointerEvents = "auto";
+        frame.setAttribute(
+          "aria-label",
+          document.documentElement.lang === "en"
+            ? "Play academy video"
+            : "تشغيل فيديو الأكاديمية"
+        );
+        const unlock = () => {
+          userPaused = false;
+          shouldPlay = true;
+          tryPlay();
+        };
+        frame.addEventListener("click", unlock, { once: true });
+        frame.addEventListener(
+          "keydown",
+          (event) => {
+            if (event.key === "Enter" || event.key === " ") {
+              event.preventDefault();
+              unlock();
+            }
+          },
+          { once: true }
+        );
+      }
+    }
+  };
+
+  blocks.forEach(initLivingPhoto);
 })();
 
 (() => {

@@ -1443,6 +1443,16 @@ html[dir="ltr"] .academy-lead {
   opacity: 1;
 }
 
+/* Homepage flagship — video only, no poster plate */
+.academy-flagship-media--solo {
+  background: color-mix(in srgb, var(--blush) 45%, #1a1210);
+}
+
+.academy-flagship-media--solo .academy-flagship-video {
+  opacity: 1;
+  transition: opacity 0.28s var(--ease-silk);
+}
+
 .academy-flagship-video::-webkit-media-controls,
 .academy-flagship-video::-webkit-media-controls-enclosure,
 .academy-flagship-video::-webkit-media-controls-panel,
