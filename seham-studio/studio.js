@@ -12,7 +12,7 @@
     fonts.id = "seham-fonts";
     fonts.rel = "stylesheet";
     fonts.href =
-      "https://fonts.googleapis.com/css2?family=Fustat:wght@400;500;600;700&family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=Jost:wght@300;400&family=Tajawal:wght@400;500;700&display=swap";
+      "https://fonts.googleapis.com/css2?family=Aref+Ruqaa:wght@400;700&family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=Jost:wght@300;400&family=Tajawal:wght@400;500;700&display=swap";
     document.head.append(pre1, pre2, fonts);
   }
 

@@ -6,7 +6,7 @@
   --slg-paper: #faf5ef;
   --slg-ink: #3b0c18;
   --slg-muted: #73585b;
-  --slg-display: var(--arabic-display, "Fustat", "Noto Naskh Arabic", serif);
+  --slg-display: var(--arabic-headline, "Artistic Ruqaa", "Aref Ruqaa", serif);
   --slg-body: var(--body-ar, Tajawal, Tahoma, Arial, sans-serif);
   --slg-latin: var(--english-display, "Jost", "Helvetica Neue", Arial, sans-serif);
   box-sizing: border-box;

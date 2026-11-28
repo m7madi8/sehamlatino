@@ -226,6 +226,7 @@ html[dir="ltr"] .about-portrait .ap-name::after {
 
 .about-portrait .ap-title {
   margin: 0;
+  font-family: var(--arabic-headline, "Artistic Ruqaa", "Aref Ruqaa", serif);
   font-size: max(46px, calc(108 * var(--px)));
   font-weight: 600;
   line-height: 1.3;
@@ -235,6 +236,7 @@ html[dir="ltr"] .about-portrait .ap-name::after {
 }
 
 html[lang="en"] .about-portrait .ap-title {
+  font-family: var(--english-display, "Jost", sans-serif);
   font-size: max(38px, calc(70 * var(--px)));
   line-height: 1.16;
   letter-spacing: -0.012em;
